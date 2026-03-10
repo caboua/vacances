@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Location Villa CABOUA – Villa Premium en Guadeloupe</title>
+<meta name="description" content="Villa CABOUA en Guadeloupe. Location saisonnière jusqu'à 8 personnes. Jardin tropical, calme, proche plages.">
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+</head>
+
+<body>
+<header>
+  <h1>Villa CABOUA</h1>
+  <p>Location villa en Guadeloupe – Jusqu'à 8 voyageurs</p>
+  <a href="#reservation" class="hero-btn">Vérifier les disponibilités</a>
+</header>
+
+<div class="container">
+  <div class="left">
+    <div class="section">
+      <h2>Description</h2>
+      <p>Villa moderne située en Guadeloupe, idéale pour un séjour en famille. Terrasse aménagée, jardin tropical, environnement calme.</p>
+      <ul>
+        <li>Suite parentale avec salle d’eau et terrasse</li>
+        <li>2 chambres doubles climatisées</li>
+        <li>Canapé convertible</li>
+        <li>Terrasse et jardin tropical</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Galerie</h2>
+      <div class="gallery">
+        <img src="images/villa1.jpg" alt="Villa CABOUA 1">
+        <img src="images/villa2.jpg" alt="Villa CABOUA 2">
+        <img src="images/villa3.jpg" alt="Villa CABOUA 3">
+        <img src="images/BUDDHA.jpg" alt="Villa CABOUA Jardin">
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Équipements</h2>
+      <div class="equip-grid">
+        <div class="equip-item"><i class="fa-solid fa-wifi"></i> Internet haut débit</div>
+        <div class="equip-item"><i class="fa-solid fa-snowflake"></i> Climatisation</div>
+        <div class="equip-item"><i class="fa-solid fa-square-parking"></i> Parking privé</div>
+        <div class="equip-item"><i class="fa-solid fa-bed"></i> 3 chambres confortables</div>
+        <div class="equip-item"><i class="fa-solid fa-tv"></i> Télévision écran plat</div>
+        <div class="equip-item"><i class="fa-solid fa-utensils"></i> Cuisine équipée</div>
+        <div class="equip-item"><i class="fa-solid fa-seedling"></i> Jardin tropical</div>
+        <div class="equip-item"><i class="fa-solid fa-water-ladder"></i> Terrasse aménagée</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="booking" id="reservation">
+      <h3>180 € / nuit</h3>
+      <label>Dates</label>
+      <input id="calendar">
+
+      <label>Adultes</label>
+      <div class="counter">
+        <button id="adultMinus">−</button>
+        <span id="adultCount">2</span>
+        <button id="adultPlus">+</button>
+      </div>
+
+      <label>Enfants</label>
+      <div class="counter">
+        <button id="childMinus">−</button>
+        <span id="childCount">0</span>
+        <button id="childPlus">+</button>
+      </div>
+
+      <p class="limit-info">Maximum 8 personnes (6 adultes maximum)</p>
+      <div id="billing"></div>
+
+      <button id="checkoutButton">Réserver maintenant</button>
+
+      <div class="section">
+        <h2>Avis clients</h2>
+        <div class="review">
+          <p>“Séjour incroyable, villa très confortable et jardin magnifique !”</p>
+          <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a href="#" id="whatsappFloat" class="whatsapp-float"><i class="fa-brands fa-whatsapp"></i></a>
+
+<script src="js/main.js"></script>
+</body>
+</html>

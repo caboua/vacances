@@ -11,12 +11,14 @@ function updateButtons() {
     document.getElementById("childMinus").disabled = children <= 0;
     document.getElementById("childPlus").disabled = adults + children >= MAX_TOTAL;
 }
+
 function changeAdult(n) {
     let na = adults + n;
     if (na < 1 || na > MAX_ADULTS || na + children > MAX_TOTAL) return;
     adults = na; document.getElementById("adultCount").innerText = adults;
     updateButtons(); calculate();
 }
+
 function changeChild(n) {
     let nc = children + n;
     if (nc < 0 || adults + nc > MAX_TOTAL) return;
@@ -24,15 +26,18 @@ function changeChild(n) {
     updateButtons(); calculate();
 }
 
-// Calcul total
+// Calcul total et mise à jour billing
 function calculate() {
-    if (!startDate || !endDate) return 0;
+    if (!startDate || !endDate) {
+        billing.innerHTML = "";
+        return 0;
+    }
     let nights = (endDate - startDate)/(1000*60*60*24);
     let subtotal = nights * NIGHT_PRICE;
     let tax = adults * TAX_PER_ADULT;
     let total = subtotal + CLEANING + tax;
     billing.innerHTML = `
-        <div class="billing-line"><span>${nights} nuits</span><span>${subtotal.toFixed(2)} €</span></div>
+        <div class="billing-line"><span>${nights} nuit(s)</span><span>${subtotal.toFixed(2)} €</span></div>
         <div class="billing-line"><span>Taxe séjour</span><span>${tax.toFixed(2)} €</span></div>
         <div class="billing-line"><span>Ménage</span><span>${CLEANING.toFixed(2)} €</span></div>
         <hr>
@@ -48,10 +53,14 @@ document.getElementById("childMinus").onclick = () => changeChild(-1);
 document.getElementById("childPlus").onclick = () => changeChild(1);
 updateButtons();
 
-// Calendrier
+// Calendrier Flatpickr avec mise à jour billing immédiate
 calendarInput.addEventListener("change", e => {
     let dates = calendarInput._flatpickr.selectedDates;
-    if (dates.length === 2) { startDate = dates[0]; endDate = dates[1]; calculate(); }
+    if (dates.length === 2) { 
+        startDate = dates[0]; 
+        endDate = dates[1]; 
+        calculate(); // <-- mise à jour immédiate du détail tarifaire
+    }
 });
 
 // Modal réservation
@@ -86,13 +95,10 @@ confirmBtn.onclick = () => {
 }
 
 // WhatsApp
-const whatsappBtn = document.getElementById("whatsappFloat");
-
-whatsappBtn.addEventListener("click", (e) => {
-    e.preventDefault(); // Empêche le href par défaut
+document.getElementById("whatsappFloat").addEventListener("click", () => {
     let msg = `Bonjour, je souhaite des infos pour Villa CABOUA.`;
-    if(window.startDate && window.endDate){
-        msg = `Bonjour, je souhaite réserver Villa CABOUA du ${window.startDate.toLocaleDateString("fr-FR")} au ${window.endDate.toLocaleDateString("fr-FR")} pour ${adults} adulte(s) et ${children} enfant(s).`;
+    if(startDate && endDate){
+        msg = `Bonjour, je souhaite réserver Villa CABOUA du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")} pour ${adults} adulte(s) et ${children} enfant(s).`;
     }
     window.open(`https://wa.me/590690520616?text=${encodeURIComponent(msg)}`, "_blank");
 });

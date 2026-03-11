@@ -4,7 +4,6 @@ const calendarInput = document.getElementById('calendar');
 
 async function fetchBusyDates() {
     const today = new Date();
-    // On récupère jusqu’à 6 mois à l’avance (tu peux changer)
     const maxDate = new Date();
     maxDate.setMonth(today.getMonth() + 6);
 
@@ -19,8 +18,6 @@ async function fetchBusyDates() {
             data.items.forEach(event => {
                 let start = new Date(event.start.date || event.start.dateTime);
                 let end = new Date(event.end.date || event.end.dateTime);
-
-                // On parcourt toutes les dates entre start et end
                 for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
                     disabled.push(new Date(d));
                 }
@@ -45,4 +42,3 @@ async function initFlatpickr() {
 }
 
 initFlatpickr();
-

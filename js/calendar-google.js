@@ -41,4 +41,4 @@ async function initFlatpickr() {
     });
 }
 
-initFlatpickr();
+document.addEventListener("DOMContentLoaded", initFlatpickr);

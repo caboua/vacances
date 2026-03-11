@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Location Villa CABOUA – Villa Premium en Guadeloupe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Villa CABOUA – Location en Guadeloupe</title>
 <meta name="description" content="Villa CABOUA en Guadeloupe. Location saisonnière jusqu'à 8 personnes. Jardin tropical, calme, proche plages.">
 
 <link rel="stylesheet" href="css/style.css">
@@ -15,14 +15,19 @@
 </head>
 
 <body>
+
 <header>
-  <h1>Villa CABOUA</h1>
-  <p>Location villa en Guadeloupe – Jusqu'à 8 voyageurs</p>
-  <a href="#calendar" class="hero-btn">Vérifier les disponibilités</a>
+  <div class="hero-content">
+    <h1>Villa CABOUA</h1>
+    <p>Location villa en Guadeloupe – Jusqu'à 8 voyageurs</p>
+    <a href="#disponibilites" class="hero-btn">Vérifier les disponibilités</a>
+  </div>
 </header>
 
 <div class="container">
   <div class="left">
+
+    <!-- Description -->
     <div class="section">
       <h2>Description</h2>
       <p>Villa moderne située en Guadeloupe, idéale pour un séjour en famille. Terrasse aménagée, jardin tropical, environnement calme.</p>
@@ -61,8 +66,19 @@
         <div class="equip-item"><i class="fa-solid fa-water-ladder"></i> Terrasse aménagée</div>
       </div>
     </div>
+
+    <!-- Calendrier Google visible -->
+    <div class="section" id="disponibilites">
+      <h2>Disponibilités</h2>
+      <iframe 
+        src="https://calendar.google.com/calendar/embed?src=a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75%40group.calendar.google.com&ctz=America%2FGuadeloupe" 
+        style="border:0" width="100%" height="600" frameborder="0" scrolling="no">
+      </iframe>
+    </div>
+
   </div>
 
+  <!-- Réservation -->
   <div class="right">
     <div class="booking" id="reservation">
       <h3>180 € / nuit</h3>
@@ -102,6 +118,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -116,12 +133,10 @@
   </div>
 </div>
 
-<!-- WhatsApp flottant -->
-<a href="#" id="whatsappFloat" class="whatsapp-float">
-  <i class="fa-brands fa-whatsapp"></i>
-</a>
+<a href="#" id="whatsappFloat" class="whatsapp-float"><i class="fa-brands fa-whatsapp"></i></a>
 
 <script src="js/calendar-google.js"></script>
 <script src="js/main.js"></script>
+
 </body>
 </html>

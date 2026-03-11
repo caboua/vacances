@@ -1,54 +1,173 @@
-/* Header */
-header {
-  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-              url('../images/fond.jpg') center/cover no-repeat;
-  color: white;
-  text-align: center;
-  padding: 150px 20px;
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:#f6f6f6;
+color:#222;
 }
 
-header h1 {
-  font-size: 3rem;
-  letter-spacing: 3px;
-  margin: 0;
+
+/* HEADER PREMIUM */
+
+header{
+position:relative;
+height:500px;
+background:url('../images/fond.jpg') center/cover no-repeat;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+color:white;
 }
 
-header p {
-  color: #f1c40f;
-  margin-top: 15px;
+header::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.45);
 }
 
-.hero-btn {
-  display: inline-block;
-  margin-top: 30px;
-  padding: 15px 30px;
-  background: #e67e22;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: bold;
-  transition: 0.3s;
+.hero-content{
+position:relative;
+z-index:2;
 }
 
-.hero-btn:hover {
-  background: #cf711f;
+header h1{
+font-size:3.5rem;
+margin:0;
+letter-spacing:3px;
 }
 
-/* Galerie */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
+header p{
+margin-top:15px;
+font-size:1.2rem;
+color:#f1c40f;
 }
 
-.gallery img {
-  width: 100%;
-  border-radius: 12px;
+.hero-btn{
+display:inline-block;
+margin-top:30px;
+padding:15px 35px;
+background:#e67e22;
+color:white;
+text-decoration:none;
+border-radius:30px;
+font-weight:bold;
+transition:0.3s;
 }
 
-/* Responsive */
-@media(max-width: 900px) {
-  .gallery {
-    grid-template-columns: 1fr;
-  }
+.hero-btn:hover{
+background:#cf711f;
+transform:translateY(-2px);
+}
+
+
+.container{
+max-width:1200px;
+margin:50px auto;
+display:flex;
+gap:40px;
+padding:0 20px;
+}
+
+.left{flex:2}
+.right{flex:1}
+
+
+.section{
+background:white;
+padding:30px;
+margin-bottom:35px;
+border-radius:15px;
+box-shadow:0 8px 25px rgba(0,0,0,0.05);
+}
+
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
+
+.gallery img{
+width:100%;
+border-radius:12px;
+}
+
+
+.equip-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+margin-top:15px;
+}
+
+.equip-item{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.equip-item i{
+color:#27ae60;
+}
+
+
+.booking{
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.12);
+position:sticky;
+top:20px;
+}
+
+
+.counter{
+display:flex;
+align-items:center;
+gap:10px;
+margin-top:5px;
+}
+
+.counter button{
+width:32px;
+height:32px;
+border-radius:50%;
+border:1px solid #ccc;
+background:white;
+cursor:pointer;
+}
+
+
+.whatsapp-float{
+position:fixed;
+bottom:20px;
+right:20px;
+width:65px;
+height:65px;
+background:#25D366;
+color:white;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:32px;
+box-shadow:0 8px 25px rgba(0,0,0,0.3);
+cursor:pointer;
+}
+
+
+@media(max-width:900px){
+
+.container{
+flex-direction:column;
+}
+
+.gallery{
+grid-template-columns:1fr;
+}
+
 }

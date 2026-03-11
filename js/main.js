@@ -55,4 +55,6 @@ confirmBtn.onclick=()=>{
 // WhatsApp
 document.getElementById("whatsappFloat").addEventListener("click",()=>{
     let msg=`Bonjour, je souhaite des infos pour Villa CABOUA.`;
-    if(startDate&&endDate){msg=`Bonjour, je souhaite réserver Villa CABOUA du ${startDate.toLocaleDateString("fr-FR")} au ${
+    if(startDate&&endDate){msg=`Bonjour, je souhaite réserver Villa CABOUA du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")} pour ${adults} adulte(s) et ${children} enfant(s).`;}
+    window.open(`https://wa.me/590690520616?text=${encodeURIComponent(msg)}`,"_blank");
+});

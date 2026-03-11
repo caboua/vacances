@@ -6,14 +6,11 @@ async function fetchBusyDates() {
     const today = new Date();
     const maxDate = new Date();
     maxDate.setMonth(today.getMonth() + 6);
-
     const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${today.toISOString()}&timeMax=${maxDate.toISOString()}&singleEvents=true&orderBy=startTime`;
-
     try {
         const res = await fetch(url);
         const data = await res.json();
         const disabled = [];
-
         if (data.items) {
             data.items.forEach(event => {
                 let start = new Date(event.start.date || event.start.dateTime);

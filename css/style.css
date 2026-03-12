@@ -1,14 +1,22 @@
-/* === GLOBAL === */
+/* style.css */
+
+/* Reset & Base */
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: #f6f6f6;
     color: #222;
 }
+h1, h2, h3, p, ul {
+    margin: 0;
+    padding: 0;
+}
+ul {
+    list-style: disc;
+    padding-left: 20px;
+}
 
-a { text-decoration: none; }
-
-/* === HEADER HERO === */
+/* Header */
 header {
     background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../images/fond.jpg') center/cover no-repeat;
     color: white;
@@ -18,7 +26,6 @@ header {
 header h1 {
     font-size: 3rem;
     letter-spacing: 3px;
-    margin: 0;
 }
 header p {
     color: #f1c40f;
@@ -30,26 +37,26 @@ header p {
     padding: 15px 30px;
     background: #e67e22;
     color: white;
-    font-weight: bold;
+    text-decoration: none;
     border-radius: 8px;
+    font-weight: bold;
     transition: 0.3s;
 }
-.hero-btn:hover {
-    background: #cf711f;
-}
+.hero-btn:hover { background: #cf711f; }
 
-/* === CONTAINER LAYOUT === */
+/* Container layout */
 .container {
     max-width: 1200px;
     margin: 50px auto;
     display: flex;
     gap: 40px;
     padding: 0 20px;
+    flex-wrap: wrap;
 }
-.left { flex: 2; }
-.right { flex: 1; }
+.left { flex: 2; min-width: 300px; }
+.right { flex: 1; min-width: 250px; }
 
-/* === SECTION CARDS === */
+/* Sections */
 .section {
     background: white;
     padding: 30px;
@@ -58,18 +65,19 @@ header p {
     box-shadow: 0 8px 25px rgba(0,0,0,0.05);
 }
 
-/* === GALERIE === */
+/* Gallery */
 .gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
+    margin-top: 15px;
 }
 .gallery img {
     width: 100%;
     border-radius: 12px;
 }
 
-/* === ÉQUIPEMENTS === */
+/* Equipments */
 .equip-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -83,19 +91,30 @@ header p {
 }
 .equip-item i { color: #27ae60; }
 
-/* === BOOKING RIGHT PANEL === */
-.booking {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-    position: sticky;
-    top: 20px;
-    border: 1px solid #eee;
+/* Calendar + Selection */
+#disponibilites .flex-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
 }
-.booking h3 { font-size: 28px; margin-top: 0; }
-label { font-weight: bold; display: block; margin-top: 15px; }
-.counter { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+#disponibilites .flex-container > div {
+    flex: 1;
+    min-width: 200px;
+}
+#calendar {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* Booking */
+.counter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
 .counter button {
     width: 32px;
     height: 32px;
@@ -105,28 +124,41 @@ label { font-weight: bold; display: block; margin-top: 15px; }
     cursor: pointer;
 }
 .counter button:disabled { opacity: 0.4; cursor: not-allowed; }
+.limit-info { font-size: 13px; color: #666; margin-top: 10px; }
 
 #checkoutButton {
     width: 100%;
-    padding: 14px;
+    padding: 12px;
     background: #e67e22;
     border: none;
     border-radius: 10px;
     color: white;
     font-weight: bold;
-    margin-top: 20px;
+    margin-top: 10px;
     cursor: pointer;
     font-size: 16px;
 }
 #checkoutButton:hover { background: #cf711f; }
 
-.limit-info { font-size: 13px; color: #666; margin-top: 10px; }
+/* Billing */
+#billing {
+    margin-top: 15px;
+    background: #fdfdfd;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+.billing-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+.billing-line.total {
+    font-weight: bold;
+    font-size: 17px;
+}
 
-/* === FACTURATION === */
-.billing-line { display: flex; justify-content: space-between; margin-bottom: 6px; }
-.billing-line.total { font-weight: bold; font-size: 17px; }
-
-/* === REVIEW === */
+/* Reviews */
 .review {
     background: #fdfdfd;
     padding: 15px;
@@ -134,10 +166,38 @@ label { font-weight: bold; display: block; margin-top: 15px; }
     border-radius: 10px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.05);
 }
-.review p { margin: 0 0 5px 0; font-style: italic; color: #555; }
+.review p {
+    margin: 0 0 5px 0;
+    font-style: italic;
+    color: #555;
+}
 .stars i { margin-right: 2px; color: #f1c40f; }
 
-/* === WHATSAPP FLOAT === */
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 400px;
+    text-align: center;
+}
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* WhatsApp */
 .whatsapp-float {
     position: fixed;
     bottom: 20px;
@@ -164,33 +224,10 @@ label { font-weight: bold; display: block; margin-top: 15px; }
     100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
 }
 
-/* === MODAL === */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.5);
-}
-.modal-content {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 20px;
-    border-radius: 12px;
-    max-width: 400px;
-    text-align: center;
-}
-.close {
-    float: right;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-/* === MEDIA QUERIES === */
+/* Responsive */
 @media(max-width:900px){
     .container { flex-direction: column; }
     .gallery { grid-template-columns: 1fr; }
     .equip-grid { grid-template-columns: 1fr; }
+    #disponibilites .flex-container { flex-direction: column; }
 }

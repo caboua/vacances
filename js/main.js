@@ -1,9 +1,18 @@
-let startDate, endDate, adults = 2, children = 0;
-const MAX_ADULTS = 6, MAX_TOTAL = 8, NIGHT_PRICE = 140, CLEANING = 120, TAX_PER_ADULT = 1.5;
+// === CONFIGURATION ===
+const NIGHT_PRICE = 140;
+const CLEANING = 120;
+const TAX_PER_ADULT = 1.5;
+const MIN_NIGHTS = 4;
+const MAX_ADULTS = 6;
+const MAX_TOTAL = 8;
+
+let startDate = null, endDate = null;
+let adults = 2, children = 0;
+
 const calendarInput = document.getElementById('calendar');
 const billing = document.getElementById('billing');
 
-// Adultes / Enfants
+// === COUNTERS ===
 function updateButtons() {
     document.getElementById("adultMinus").disabled = adults <= 1;
     document.getElementById("adultPlus").disabled = adults >= MAX_ADULTS || adults + children >= MAX_TOTAL;
@@ -14,16 +23,14 @@ function updateButtons() {
 function changeAdult(n) {
     let na = adults + n;
     if (na < 1 || na > MAX_ADULTS || na + children > MAX_TOTAL) return;
-    adults = na;
-    document.getElementById("adultCount").innerText = adults;
+    adults = na; document.getElementById("adultCount").innerText = adults;
     updateButtons(); calculate();
 }
 
 function changeChild(n) {
     let nc = children + n;
     if (nc < 0 || adults + nc > MAX_TOTAL) return;
-    children = nc;
-    document.getElementById("childCount").innerText = children;
+    children = nc; document.getElementById("childCount").innerText = children;
     updateButtons(); calculate();
 }
 
@@ -33,53 +40,106 @@ document.getElementById("childMinus").onclick = () => changeChild(-1);
 document.getElementById("childPlus").onclick = () => changeChild(1);
 updateButtons();
 
-// Calcul total
+// === CALCUL FACTURATION ===
 function calculate() {
-    if (!startDate || !endDate) return;
-    let nights = (endDate - startDate)/(1000*60*60*24);
-    if(nights < 4){ // minimum 4 nuits
-        billing.innerHTML = `<p style="color:red;">Séjour minimum 4 nuits</p>`;
+    if (!startDate || !endDate) {
+        billing.innerHTML = '';
         return 0;
     }
+    let nights = (endDate - startDate)/(1000*60*60*24);
+    if (nights < MIN_NIGHTS) {
+        billing.innerHTML = `<span style="color:red;">Séjour minimum ${MIN_NIGHTS} nuits</span>`;
+        return 0;
+    }
+
     let subtotal = nights * NIGHT_PRICE;
     let tax = adults * TAX_PER_ADULT;
     let total = subtotal + CLEANING + tax;
+
     billing.innerHTML = `
-        <div class="billing-line"><span>${nights} nuits</span><span>${subtotal.toFixed(2)} €</span></div>
+        <div class="billing-line"><span>${nights} nuits x ${NIGHT_PRICE} €</span><span>${subtotal.toFixed(2)} €</span></div>
         <div class="billing-line"><span>Taxe séjour</span><span>${tax.toFixed(2)} €</span></div>
         <div class="billing-line"><span>Ménage</span><span>${CLEANING.toFixed(2)} €</span></div>
         <hr>
-        <div class="billing-line total"><span>Total</span><span>${total.toFixed(2)} €</span></div>
+        <div class="billing-line total"><span>Total estimé</span><span>${total.toFixed(2)} €</span></div>
     `;
+
     return total;
 }
 
-// Événement sur calendrier
-calendarInput.addEventListener("change", e => {
-    let dates = calendarInput._flatpickr.selectedDates;
-    if (dates.length === 2) { startDate = dates[0]; endDate = dates[1]; calculate(); }
-});
+// === INITIALISATION FLATPICKR ===
+async function fetchBusyDates() {
+    const CALENDAR_ID = 'a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75@group.calendar.google.com';
+    const API_KEY = 'AIzaSyC8Vpze8e4-Mv3D5boiNszUj5-GIfIV5Vg';
+    const today = new Date();
+    const maxDate = new Date();
+    maxDate.setMonth(today.getMonth() + 6);
 
-// Modal réservation
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${today.toISOString()}&timeMax=${maxDate.toISOString()}&singleEvents=true&orderBy=startTime`;
+
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const disabled = [];
+        if (data.items) {
+            data.items.forEach(event => {
+                let start = new Date(event.start.date || event.start.dateTime);
+                let end = new Date(event.end.date || event.end.dateTime);
+                for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+                    disabled.push(new Date(d));
+                }
+            });
+        }
+        return disabled;
+    } catch (err) {
+        console.error("Erreur Google Calendar API :", err);
+        return [];
+    }
+}
+
+async function initFlatpickr() {
+    const busyDates = await fetchBusyDates();
+    flatpickr(calendarInput, {
+        locale: "fr",
+        mode: "range",
+        minDate: "today",
+        dateFormat: "d/m/Y",
+        disable: busyDates,
+        onChange: function(selectedDates) {
+            if(selectedDates.length === 2){
+                startDate = selectedDates[0];
+                endDate = selectedDates[1];
+                calculate();
+            }
+        }
+    });
+}
+
+initFlatpickr();
+
+// === MODAL RÉSERVATION ===
 const modal = document.getElementById("reservationModal");
 const summary = document.getElementById("reservationSummary");
 const closeBtn = document.querySelector(".close");
 const confirmBtn = document.getElementById("confirmBooking");
 
 document.getElementById("checkoutButton").addEventListener("click", () => {
-    if (!startDate || !endDate) { alert("Sélectionnez vos dates"); return; }
+    if(!startDate || !endDate){
+        alert("Sélectionnez vos dates");
+        return;
+    }
     summary.innerHTML = `
-      Du <b>${startDate.toLocaleDateString("fr-FR")}</b> au <b>${endDate.toLocaleDateString("fr-FR")}</b><br>
-      <b>${adults}</b> adulte(s), <b>${children}</b> enfant(s)<br>
-      Total estimé : <b>${calculate().toFixed(2)} €</b>
+        Du <b>${startDate.toLocaleDateString("fr-FR")}</b> au <b>${endDate.toLocaleDateString("fr-FR")}</b><br>
+        <b>${adults}</b> adulte(s), <b>${children}</b> enfant(s)<br>
+        Total estimé : <b>${calculate().toFixed(2)} €</b>
     `;
     modal.style.display = "block";
 });
 
 closeBtn.onclick = () => modal.style.display = "none";
-window.onclick = e => { if (e.target == modal) modal.style.display = "none"; }
+window.onclick = e => { if(e.target == modal) modal.style.display = "none"; }
 
-// Confirmation email
+// === CONFIRM EMAIL ===
 confirmBtn.onclick = () => {
     const subject = encodeURIComponent("Réservation Villa CABOUA");
     const body = encodeURIComponent(
@@ -91,9 +151,9 @@ confirmBtn.onclick = () => {
     modal.style.display = "none";
 }
 
-// WhatsApp flottant
+// === WHATSAPP ===
 document.getElementById("whatsappFloat").addEventListener("click", () => {
-    let msg = `Bonjour, je souhaite des infos pour Villa CABOUA.`;
+    let msg = "Bonjour, je souhaite des infos pour Villa CABOUA.";
     if(startDate && endDate){
         msg = `Bonjour, je souhaite réserver Villa CABOUA du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")} pour ${adults} adulte(s) et ${children} enfant(s).`;
     }

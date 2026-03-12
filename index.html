@@ -4,16 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Villa CABOUA – Location en Guadeloupe</title>
-<meta name="description" content="Villa CABOUA en Guadeloupe. Location saisonnière jusqu'à 8 personnes. Jardin tropical, calme, proche plages.">
-
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
 </head>
-
 <body>
 
 <header>
@@ -26,49 +20,8 @@
 
 <div class="container">
   <div class="left">
-
-    <!-- Description -->
+    <!-- Description, Galerie, Équipements -->
     <div class="section">
-      <h2>Description</h2>
-      <p>Villa moderne située en Guadeloupe, idéale pour un séjour en famille. Terrasse aménagée, jardin tropical, environnement calme.</p>
-      <ul>
-        <li>Suite parentale avec salle d’eau et terrasse</li>
-        <li>2 chambres doubles climatisées</li>
-        <li>Canapé convertible</li>
-        <li>Terrasse et jardin tropical</li>
-      </ul>
-    </div>
-
-    <!-- Galerie -->
-    <div class="section">
-      <h2>Galerie</h2>
-      <div class="gallery">
-        <img src="images/salon.jpg" alt="Salon">
-        <img src="images/cuisine.jpg" alt="Cuisine">
-        <img src="images/chambre1.jpeg" alt="Chambre 1">
-        <img src="images/chambre2.jpeg" alt="Chambre 2">
-        <img src="images/chambreparentale.jpeg" alt="Chambre parentale">
-        <img src="images/terrasse.jpg" alt="Terrasse">
-      </div>
-    </div>
-
-    <!-- Équipements -->
-    <div class="section">
-      <h2>Équipements</h2>
-      <div class="equip-grid">
-        <div class="equip-item"><i class="fa-solid fa-wifi"></i> Internet haut débit</div>
-        <div class="equip-item"><i class="fa-solid fa-snowflake"></i> Climatisation</div>
-        <div class="equip-item"><i class="fa-solid fa-square-parking"></i> Parking privé</div>
-        <div class="equip-item"><i class="fa-solid fa-bed"></i> 3 chambres confortables</div>
-        <div class="equip-item"><i class="fa-solid fa-tv"></i> Télévision écran plat</div>
-        <div class="equip-item"><i class="fa-solid fa-utensils"></i> Cuisine équipée</div>
-        <div class="equip-item"><i class="fa-solid fa-seedling"></i> Jardin tropical</div>
-        <div class="equip-item"><i class="fa-solid fa-water-ladder"></i> Terrasse aménagée</div>
-      </div>
-    </div>
-
-    <!-- Calendrier + sélection dates -->
-    <div class="section" id="disponibilites">
       <h2>Disponibilités</h2>
       <iframe 
         src="https://calendar.google.com/calendar/embed?src=a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75%40group.calendar.google.com&ctz=America%2FGuadeloupe" 
@@ -76,16 +29,13 @@
       </iframe>
       <p style="margin-top:15px;font-weight:bold;">Sélectionnez vos dates :</p>
       <input id="calendar" placeholder="Cliquez pour choisir les dates" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
-      <div id="billing"></div>
+      <div id="billing" style="margin-top:15px;"></div>
     </div>
-
   </div>
 
-  <!-- Réservation -->
   <div class="right">
-    <div class="booking" id="reservation">
+    <div class="booking">
       <h3>140 € / nuit</h3>
-
       <label>Adultes</label>
       <div class="counter">
         <button id="adultMinus">−</button>
@@ -102,21 +52,6 @@
 
       <p class="limit-info">Maximum 8 personnes (6 adultes maximum)</p>
       <button id="checkoutButton">Réserver maintenant</button>
-
-      <div class="section">
-        <h2>Avis clients</h2>
-        <div class="review">
-          <p>“Séjour incroyable, villa très confortable et jardin magnifique !”</p>
-          <div class="stars">
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 </div>
@@ -131,11 +66,12 @@
   </div>
 </div>
 
-<!-- WhatsApp flottant -->
-<a href="#" id="whatsappFloat" class="whatsapp-float"><i class="fa-brands fa-whatsapp"></i></a>
+<a href="#" id="whatsappFloat" class="whatsapp-float">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
 
-<script src="js/calendar-google.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
 <script src="js/main.js"></script>
-
 </body>
 </html>

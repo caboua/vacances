@@ -1,9 +1,10 @@
-let startDate, endDate
+document.addEventListener("DOMContentLoaded", function () {
+
+let startDate = null
+let endDate = null
+
 let adults = 2
 let children = 0
-
-const MAX_ADULTS = 6
-const MAX_TOTAL = 8
 
 const NIGHT_PRICE = 140
 const MIN_NIGHTS = 4
@@ -12,94 +13,16 @@ const TAX = 1.5
 
 const billing = document.getElementById("billing")
 
-function updateButtons(){
-document.getElementById("adultMinus").disabled = adults <= 1
-document.getElementById("adultPlus").disabled = adults >= MAX_ADULTS || adults + children >= MAX_TOTAL
+/* calendrier */
 
-document.getElementById("childMinus").disabled = children <= 0
-document.getElementById("childPlus").disabled = adults + children >= MAX_TOTAL
-}
+flatpickr("#calendar", {
 
-function changeAdult(n){
-let na = adults + n
-if(na < 1 || na > MAX_ADULTS || na + children > MAX_TOTAL) return
-adults = na
-document.getElementById("adultCount").innerText = adults
-updateButtons()
-calculate()
-}
+mode: "range",
+locale: "fr",
+minDate: "today",
+dateFormat: "d/m/Y",
 
-function changeChild(n){
-let nc = children + n
-if(nc < 0 || adults + nc > MAX_TOTAL) return
-children = nc
-document.getElementById("childCount").innerText = children
-updateButtons()
-calculate()
-}
-
-document.getElementById("adultMinus").onclick = ()=>changeAdult(-1)
-document.getElementById("adultPlus").onclick = ()=>changeAdult(1)
-document.getElementById("childMinus").onclick = ()=>changeChild(-1)
-document.getElementById("childPlus").onclick = ()=>changeChild(1)
-
-updateButtons()
-
-function calculate(){
-
-if(!startDate || !endDate) return
-
-let nights = (endDate - startDate) / (1000*60*60*24)
-
-if(nights < MIN_NIGHTS){
-billing.innerHTML = `
-<p style="color:red;font-weight:bold;">
-Minimum ${MIN_NIGHTS} nuits
-</p>
-`
-return
-}
-
-let nightsPrice = nights * NIGHT_PRICE
-let tax = adults * TAX * nights
-let total = nightsPrice + CLEANING + tax
-
-billing.innerHTML = `
-
-<div class="billing-line">
-${nights} nuits x ${NIGHT_PRICE} €
-<span>${nightsPrice.toFixed(2)} €</span>
-</div>
-
-<div class="billing-line">
-Taxe de séjour (${adults} adultes)
-<span>${tax.toFixed(2)} €</span>
-</div>
-
-<div class="billing-line">
-Frais ménage
-<span>${CLEANING} €</span>
-</div>
-
-<hr>
-
-<div class="billing-total">
-Total
-<span>${total.toFixed(2)} €</span>
-</div>
-`
-}
-
-document.addEventListener("DOMContentLoaded",()=>{
-
-const calendar = flatpickr("#calendar",{
-
-mode:"range",
-locale:"fr",
-minDate:"today",
-dateFormat:"d/m/Y",
-
-onChange:function(selectedDates){
+onChange: function(selectedDates){
 
 if(selectedDates.length === 2){
 
@@ -113,5 +36,75 @@ calculate()
 }
 
 })
+
+/* calcul prix */
+
+function calculate(){
+
+let nights = (endDate - startDate) / (1000*60*60*24)
+
+if(nights < MIN_NIGHTS){
+
+billing.innerHTML =
+"<p style='color:red;font-weight:bold'>Minimum 4 nuits</p>"
+
+return
+}
+
+let nightsPrice = nights * NIGHT_PRICE
+let tax = adults * TAX * nights
+let total = nightsPrice + tax + CLEANING
+
+billing.innerHTML = `
+
+<div>${nights} nuits × ${NIGHT_PRICE} € = ${nightsPrice.toFixed(2)} €</div>
+
+<div>Taxe séjour (${adults} adultes) : ${tax.toFixed(2)} €</div>
+
+<div>Frais ménage : ${CLEANING} €</div>
+
+<hr>
+
+<div style="font-weight:bold;font-size:18px">
+Total : ${total.toFixed(2)} €
+</div>
+
+`
+
+}
+
+/* compteurs */
+
+document.getElementById("adultMinus").onclick = function(){
+if(adults > 1){
+adults--
+document.getElementById("adultCount").innerText = adults
+calculate()
+}
+}
+
+document.getElementById("adultPlus").onclick = function(){
+if(adults < 6){
+adults++
+document.getElementById("adultCount").innerText = adults
+calculate()
+}
+}
+
+document.getElementById("childMinus").onclick = function(){
+if(children > 0){
+children--
+document.getElementById("childCount").innerText = children
+calculate()
+}
+}
+
+document.getElementById("childPlus").onclick = function(){
+if(children + adults < 8){
+children++
+document.getElementById("childCount").innerText = children
+calculate()
+}
+}
 
 })

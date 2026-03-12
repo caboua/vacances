@@ -37,8 +37,14 @@ async function initFlatpickr() {
         mode: "range",
         dateFormat: "d/m/Y",
         minDate: "today",
-        disable: busyDates
+        disable: busyDates,
+        onClose: function(selectedDates) {
+            if(selectedDates.length === 2){
+                const event = new Event('change');
+                calendarInput.dispatchEvent(event);
+            }
+        }
     });
 }
 
-document.addEventListener("DOMContentLoaded", initFlatpickr);
+initFlatpickr();

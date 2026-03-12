@@ -1,110 +1,147 @@
-document.addEventListener("DOMContentLoaded", function () {
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Villa CABOUA – Location en Guadeloupe</title>
+<meta name="description" content="Villa CABOUA en Guadeloupe. Location saisonnière jusqu'à 8 personnes. Jardin tropical, calme, proche plages.">
 
-let startDate = null
-let endDate = null
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-let adults = 2
-let children = 0
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+</head>
 
-const NIGHT_PRICE = 140
-const MIN_NIGHTS = 4
-const CLEANING = 120
-const TAX = 1.5
+<body>
 
-const billing = document.getElementById("billing")
+<header>
+  <div class="hero-content">
+    <h1>Villa CABOUA</h1>
+    <p>Location villa en Guadeloupe – Jusqu'à 8 voyageurs</p>
+    <a href="#disponibilites" class="hero-btn">Vérifier les disponibilités</a>
+  </div>
+</header>
 
-/* calendrier */
+<div class="container">
+  <div class="left">
 
-flatpickr("#calendar", {
+    <!-- Description -->
+    <div class="section">
+      <h2>Description</h2>
+      <p>Villa moderne située en Guadeloupe, idéale pour un séjour en famille. Terrasse aménagée, jardin tropical, environnement calme.</p>
+      <ul>
+        <li>Suite parentale avec salle d’eau et terrasse</li>
+        <li>2 chambres doubles climatisées</li>
+        <li>Canapé convertible</li>
+        <li>Terrasse et jardin tropical</li>
+      </ul>
+    </div>
 
-mode: "range",
-locale: "fr",
-minDate: "today",
-dateFormat: "d/m/Y",
+    <!-- Galerie -->
+    <div class="section">
+      <h2>Galerie</h2>
+      <div class="gallery">
+        <img src="images/salon.jpg" alt="Salon">
+        <img src="images/cuisine.jpg" alt="Cuisine">
+        <img src="images/chambre1.jpeg" alt="Chambre 1">
+        <img src="images/chambre2.jpeg" alt="Chambre 2">
+        <img src="images/chambreparentale.jpeg" alt="Chambre parentale">
+        <img src="images/terrasse.jpg" alt="Terrasse">
+      </div>
+    </div>
 
-onChange: function(selectedDates){
+    <!-- Équipements -->
+    <div class="section">
+      <h2>Équipements</h2>
+      <div class="equip-grid">
+        <div class="equip-item"><i class="fa-solid fa-wifi"></i> Internet haut débit</div>
+        <div class="equip-item"><i class="fa-solid fa-snowflake"></i> Climatisation</div>
+        <div class="equip-item"><i class="fa-solid fa-square-parking"></i> Parking privé</div>
+        <div class="equip-item"><i class="fa-solid fa-bed"></i> 3 chambres confortables</div>
+        <div class="equip-item"><i class="fa-solid fa-tv"></i> Télévision écran plat</div>
+        <div class="equip-item"><i class="fa-solid fa-utensils"></i> Cuisine équipée</div>
+        <div class="equip-item"><i class="fa-solid fa-seedling"></i> Jardin tropical</div>
+        <div class="equip-item"><i class="fa-solid fa-water-ladder"></i> Terrasse aménagée</div>
+      </div>
+    </div>
 
-if(selectedDates.length === 2){
+    <!-- Calendrier Google + Flatpickr -->
+    <div class="section" id="disponibilites">
+      <h2>Disponibilités</h2>
+      <iframe 
+        src="https://calendar.google.com/calendar/embed?src=a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75%40group.calendar.google.com&ctz=America%2FGuadeloupe" 
+        style="border:0" width="100%" height="400" frameborder="0" scrolling="no">
+      </iframe>
+      <p style="margin-top:15px;font-weight:bold;">Sélectionnez vos dates :</p>
+      <input id="calendar" placeholder="Cliquez pour choisir les dates" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
+    </div>
 
-startDate = selectedDates[0]
-endDate = selectedDates[1]
+  </div>
 
-calculate()
+  <!-- Réservation -->
+  <div class="right">
+    <div class="booking" id="reservation">
+      <h3>180 € / nuit</h3>
 
-}
+      <label>Adultes</label>
+      <div class="counter">
+        <button id="adultMinus">−</button>
+        <span id="adultCount">2</span>
+        <button id="adultPlus">+</button>
+      </div>
 
-}
+      <label>Enfants</label>
+      <div class="counter">
+        <button id="childMinus">−</button>
+        <span id="childCount">0</span>
+        <button id="childPlus">+</button>
+      </div>
 
-})
+      <p class="limit-info">Maximum 8 personnes (6 adultes maximum)</p>
+      <div id="billing"></div>
 
-/* calcul prix */
+      <button id="checkoutButton">Réserver maintenant</button>
 
-function calculate(){
+      <div class="section">
+        <h2>Avis clients</h2>
+        <div class="review">
+          <p>“Séjour incroyable, villa très confortable et jardin magnifique !”</p>
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+        </div>
+      </div>
 
-let nights = (endDate - startDate) / (1000*60*60*24)
-
-if(nights < MIN_NIGHTS){
-
-billing.innerHTML =
-"<p style='color:red;font-weight:bold'>Minimum 4 nuits</p>"
-
-return
-}
-
-let nightsPrice = nights * NIGHT_PRICE
-let tax = adults * TAX * nights
-let total = nightsPrice + tax + CLEANING
-
-billing.innerHTML = `
-
-<div>${nights} nuits × ${NIGHT_PRICE} € = ${nightsPrice.toFixed(2)} €</div>
-
-<div>Taxe séjour (${adults} adultes) : ${tax.toFixed(2)} €</div>
-
-<div>Frais ménage : ${CLEANING} €</div>
-
-<hr>
-
-<div style="font-weight:bold;font-size:18px">
-Total : ${total.toFixed(2)} €
+    </div>
+  </div>
 </div>
 
-`
+<!-- Modal réservation -->
+<div id="reservationModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Confirmer votre réservation</h2>
+    <p id="reservationSummary"></p>
+    <button id="confirmBooking">Confirmer</button>
+  </div>
+</div>
 
-}
+<a href="https://wa.me/590690520616?text=Bonjour%20je%20souhaite%20des%20informations%20sur%20la%20Villa%20CABOUA"
+   class="whatsapp-float"
+   target="_blank">
 
-/* compteurs */
+<i class="fa-brands fa-whatsapp"></i>
 
-document.getElementById("adultMinus").onclick = function(){
-if(adults > 1){
-adults--
-document.getElementById("adultCount").innerText = adults
-calculate()
-}
-}
+</a>
 
-document.getElementById("adultPlus").onclick = function(){
-if(adults < 6){
-adults++
-document.getElementById("adultCount").innerText = adults
-calculate()
-}
-}
+<script src="js/calendar-google.js"></script>
+<script src="js/main.js"></script>
 
-document.getElementById("childMinus").onclick = function(){
-if(children > 0){
-children--
-document.getElementById("childCount").innerText = children
-calculate()
-}
-}
-
-document.getElementById("childPlus").onclick = function(){
-if(children + adults < 8){
-children++
-document.getElementById("childCount").innerText = children
-calculate()
-}
-}
-
-})
+</body>
+</html>

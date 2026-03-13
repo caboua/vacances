@@ -112,11 +112,11 @@ flex-direction:column;
     flex: 1;
     min-width: 200px;
 }
+
 #calendar {
+    font-size: 16px;
+    padding: 14px;
     width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
 }
 
 /* Booking */

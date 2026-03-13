@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Villa CABOUA – Location en Guadeloupe</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style_version3.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -68,14 +68,14 @@
         style="border:0" width="100%" height="400" frameborder="0" scrolling="no">
       </iframe>
 
-      <div class="flex-container" style="display:flex; gap:20px; flex-wrap:wrap; margin-top:15px;">
-        <div style="flex:1; min-width:200px;">
+      <div class="flex-container">
+        <div>
           <label>Dates</label>
           <input id="calendar" placeholder="Cliquez pour choisir les dates">
-          <div id="billing" style="margin-top:10px;"></div>
+          <div id="billing"></div>
         </div>
 
-        <div style="min-width:150px;">
+        <div>
           <label>Adultes</label>
           <div class="counter">
             <button id="adultMinus">−</button>
@@ -91,7 +91,7 @@
           </div>
 
           <p class="limit-info">Max 8 pers. (6 adultes max)</p>
-          <button id="checkoutButton" style="margin-top:10px;">Réserver maintenant</button>
+          <button id="checkoutButton">Réserver maintenant</button>
         </div>
       </div>
     </div>
@@ -114,7 +114,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
-<script src="js/main.js"></script>
+<script src="js/main_version3.js"></script>
 
 </body>
 </html>

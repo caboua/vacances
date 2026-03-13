@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Villa CABOUA – Location en Guadeloupe</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -68,10 +68,10 @@
         style="border:0" width="100%" height="400" frameborder="0" scrolling="no">
       </iframe>
 
-      <div style="display:flex; gap:20px; margin-top:15px; flex-wrap:wrap;">
+      <div class="flex-container" style="display:flex; gap:20px; flex-wrap:wrap; margin-top:15px;">
         <div style="flex:1; min-width:200px;">
           <label>Dates</label>
-          <input id="calendar" placeholder="Cliquez pour choisir les dates" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
+          <input id="calendar" placeholder="Cliquez pour choisir les dates">
           <div id="billing" style="margin-top:10px;"></div>
         </div>
 

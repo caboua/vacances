@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
       dateFormat: "d/m/Y",
       minDate: "today",
       disable: busyDates,
+      disableMobile: true,
       onChange: function(selectedDates) {
         if (selectedDates.length === 2) {
           startDate = selectedDates[0];

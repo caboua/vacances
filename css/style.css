@@ -65,6 +65,17 @@ header p {
     box-shadow: 0 8px 25px rgba(0,0,0,0.05);
 }
 
+.booking-flex{
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+}
+
+@media (max-width:900px){
+.booking-flex{
+flex-direction:column;
+}
+}
 /* Gallery */
 .gallery {
     display: grid;

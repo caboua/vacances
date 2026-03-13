@@ -112,7 +112,18 @@ flex-direction:column;
     flex: 1;
     min-width: 200px;
 }
+.flatpickr-calendar {
+    font-size: 14px;
+}
 
+@media (max-width: 600px) {
+
+.flatpickr-calendar {
+    width: 100% !important;
+    max-width: 100%;
+}
+
+}
 #calendar {
     font-size: 16px;
     padding: 14px;

@@ -76,6 +76,11 @@ flex-wrap:wrap;
 flex-direction:column;
 }
 }
+
+.flatpickr-day {
+    height: 40px;
+    line-height: 40px;
+}
 /* Gallery */
 .gallery {
     display: grid;

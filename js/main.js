@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function(){
 const calendarId = "a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75@group.calendar.google.com"
 
-const apiKey = "TA_CLE_API"
+const apiKey = "AIzaSyC8Vpze8e4-Mv3D5boiNszUj5-GIfIV5Vg"
   fetch(`https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${apiKey}`)
   disable: blockedDates
 let price = 140

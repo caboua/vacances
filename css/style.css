@@ -15,7 +15,10 @@ ul {
     list-style: disc;
     padding-left: 20px;
 }
-
+/* Correction zoom automatique iPhone */
+input, select, textarea {
+    font-size: 16px;
+}
 /* Header */
 header {
     background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../images/fond.jpg') center/cover no-repeat;

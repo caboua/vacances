@@ -1,70 +1,80 @@
-const AIRBNB_ICAL = "https://www.airbnb.fr/calendar/ical/1637653042244841736.ics?t=b597fb5a299a46d589ae14b6b03e3b13";
+ const AIRBNB_ICAL = "https://www.airbnb.fr/calendar/ical/1637653042244841736.ics?t=b597fb5a299a46d589ae14b6b03e3b13";
 
 const calendarInput = document.getElementById('calendar');
 
 async function fetchBusyDates() {
 
-    try {
+```
+const proxy = "https://api.allorigins.win/raw?url=" + encodeURIComponent(AIRBNB_ICAL);
 
-        const response = await fetch(AIRBNB_ICAL);
-        const data = await response.text();
+try {
 
-        const jcalData = ICAL.parse(data);
-        const comp = new ICAL.Component(jcalData);
-        const events = comp.getAllSubcomponents("vevent");
+    const res = await fetch(proxy);
+    const text = await res.text();
 
-        const disabled = [];
+    const events = text.split("BEGIN:VEVENT");
 
-        events.forEach(event => {
+    const disabled = [];
 
-            const e = new ICAL.Event(event);
+    events.forEach(event => {
 
-            let start = e.startDate.toJSDate();
-            let end = e.endDate.toJSDate();
+        const startMatch = event.match(/DTSTART.*:(\d{8})/);
+        const endMatch = event.match(/DTEND.*:(\d{8})/);
 
-            for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+        if(startMatch && endMatch){
+
+            const start = parseDate(startMatch[1]);
+            const end = parseDate(endMatch[1]);
+
+            for(let d = new Date(start); d < end; d.setDate(d.getDate()+1)){
 
                 disabled.push(new Date(d));
-
-            }
-
-        });
-
-        return disabled;
-
-    } catch (error) {
-
-        console.error("Erreur lecture calendrier Airbnb :", error);
-        return [];
-
-    }
-
-}
-
-async function initFlatpickr() {
-
-    const busyDates = await fetchBusyDates();
-
-    flatpickr(calendarInput, {
-
-        locale: "fr",
-        mode: "range",
-        dateFormat: "d/m/Y",
-        minDate: "today",
-        disable: busyDates,
-
-        onClose: function(selectedDates) {
-
-            if(selectedDates.length === 2){
-
-                const event = new Event('change');
-                calendarInput.dispatchEvent(event);
 
             }
 
         }
 
     });
+
+    return disabled;
+
+} catch(err){
+
+    console.error("Erreur calendrier Airbnb", err);
+    return [];
+
+}
+```
+
+}
+
+function parseDate(dateString){
+
+```
+const year = dateString.substring(0,4);
+const month = dateString.substring(4,6)-1;
+const day = dateString.substring(6,8);
+
+return new Date(year,month,day);
+```
+
+}
+
+async function initFlatpickr(){
+
+```
+const busyDates = await fetchBusyDates();
+
+flatpickr(calendarInput,{
+
+    locale:"fr",
+    mode:"range",
+    dateFormat:"d/m/Y",
+    minDate:"today",
+    disable:busyDates
+
+});
+```
 
 }
 

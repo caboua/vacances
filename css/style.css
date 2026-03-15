@@ -61,7 +61,7 @@ header p {
 /* === GALERIE === */
 .gallery {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, 5fr);
     gap: 15px;
 }
 .gallery img {

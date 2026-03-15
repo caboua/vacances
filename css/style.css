@@ -1,4 +1,4 @@
-/* style.css - version1 */
+/* style.css */
 
 /* Reset & Base */
 body {
@@ -15,7 +15,7 @@ ul {
     list-style: disc;
     padding-left: 20px;
 }
-}
+
 /* Header */
 header {
     background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../images/fond.jpg') center/cover no-repeat;

@@ -13,8 +13,7 @@ header {
     background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url("../images/fond.jpg");
     background-size: cover;
     background-position: center;
-   background-attachment: fixed; /* optionnel : effet parallax léger
-    background-repeat: no-repeat;
+       background-repeat: no-repeat;
     color: white;
     text-align: center;
     padding: 120px 20px;

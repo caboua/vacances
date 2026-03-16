@@ -19,7 +19,7 @@ const childCount = document.getElementById("childCount");
 
 // ===== FETCH DATES OCCUPEES =====
 async function fetchBusyDates(){
-    const res = await fetch('/busy-dates.php'); // récupère le JSON depuis le serveur
+   const busyDates = await fetch('/busy-dates.php').then(r=>r.json()); // récupère le JSON depuis le serveur
     return await res.json(); // tableau de dates au format "YYYY-MM-DD"
 }
 

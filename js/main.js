@@ -42,7 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
           const end = new Date(event.end.date || event.end.dateTime);
           let current = new Date(start);
           while(current < end){
-            disabled.push(new Date(current));
+            // Convert to YYYY-MM-DD string for Flatpickr
+            disabled.push(current.toISOString().split('T')[0]);
             current.setDate(current.getDate()+1);
           }
         });
@@ -56,15 +57,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== INIT CALENDAR =====
   async function initCalendar(){
+    calendarInput.disabled = true; // Empêche l'ouverture avant init
+
     const busyDates = await fetchBusyDates();
-    flatpickr(calendarInput,{
-      locale:"fr",
-      mode:"range",
-      dateFormat:"d/m/Y",
-      minDate:"today",
-      disable:busyDates,
-      disableMobile: true, // important pour mobile
-      onChange:function(selectedDates){
+
+    flatpickr(calendarInput, {
+      locale: "fr",
+      mode: "range",
+      dateFormat: "d/m/Y",
+      minDate: "today",
+      disable: busyDates,
+      // disableMobile: true, // Commenté pour permettre calendrier natif mobile
+      onChange: function(selectedDates){
         if(selectedDates.length === 2){
           startDate = selectedDates[0];
           endDate = selectedDates[1];
@@ -72,7 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     });
+
+    calendarInput.disabled = false; // Activation après init
   }
+
   initCalendar();
 
   // ===== COMPTEURS =====

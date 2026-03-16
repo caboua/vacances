@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-const CALENDAR_ID = "a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75@group.calendar.google.com";
-const API_KEY = "AIzaSyC8Vpze8e4-Mv3D5boiNszUj5-GIfIV5Vg";
+const ICAL_URL = "https://calendar.google.com/calendar/ical/a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75%40group.calendar.google.com/private-7a0eb2fb0e870709193d167ef402f597/basic.ics";
 
 const NIGHT_PRICE = 140;
 const CLEANING = 120;
@@ -20,24 +19,33 @@ const billing = document.getElementById("billing");
 
 async function fetchBusyDates(){
 
-const today = new Date();
-const maxDate = new Date();
-maxDate.setMonth(today.getMonth()+12);
+const proxy = "https://api.allorigins.win/raw?url=";
 
-const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${today.toISOString()}&timeMax=${maxDate.toISOString()}&singleEvents=true&orderBy=startTime`;
+const res = await fetch(proxy + encodeURIComponent(ICAL_URL));
+const text = await res.text();
 
-try{
+const events = text.split("BEGIN:VEVENT");
 
-const res = await fetch(url);
-const data = await res.json();
 const disabled = [];
 
-if(data.items){
+events.forEach(event => {
 
-data.items.forEach(event =>{
+const startMatch = event.match(/DTSTART;VALUE=DATE:(\d+)/);
+const endMatch = event.match(/DTEND;VALUE=DATE:(\d+)/);
 
-const start = new Date(event.start.date || event.start.dateTime);
-const end = new Date(event.end.date || event.end.dateTime);
+if(startMatch && endMatch){
+
+const start = new Date(
+startMatch[1].slice(0,4),
+startMatch[1].slice(4,6)-1,
+startMatch[1].slice(6,8)
+);
+
+const end = new Date(
+endMatch[1].slice(0,4),
+endMatch[1].slice(4,6)-1,
+endMatch[1].slice(6,8)
+);
 
 let current = new Date(start);
 
@@ -48,18 +56,11 @@ current.setDate(current.getDate()+1);
 
 }
 
+}
+
 });
 
-}
-
 return disabled;
-
-}catch(e){
-
-console.error("Erreur calendrier :",e);
-return [];
-
-}
 
 }
 
@@ -74,7 +75,6 @@ mode:"range",
 dateFormat:"d/m/Y",
 minDate:"today",
 disable:busyDates,
-
 disableMobile:true,
 
 onChange:function(selectedDates){
@@ -168,29 +168,11 @@ const tax = adults * TAX_PER_ADULT;
 const total = subtotal + CLEANING + tax;
 
 billing.innerHTML = `
-
-<div class="billing-line">
-<span>${nights} nuits</span>
-<span>${subtotal.toFixed(2)} €</span>
-</div>
-
-<div class="billing-line">
-<span>Taxe séjour</span>
-<span>${tax.toFixed(2)} €</span>
-</div>
-
-<div class="billing-line">
-<span>Ménage</span>
-<span>${CLEANING.toFixed(2)} €</span>
-</div>
-
+<div class="billing-line"><span>${nights} nuits</span><span>${subtotal.toFixed(2)} €</span></div>
+<div class="billing-line"><span>Taxe séjour</span><span>${tax.toFixed(2)} €</span></div>
+<div class="billing-line"><span>Ménage</span><span>${CLEANING.toFixed(2)} €</span></div>
 <hr>
-
-<div class="billing-line total">
-<span>Total</span>
-<span>${total.toFixed(2)} €</span>
-</div>
-
+<div class="billing-line total"><span>Total</span><span>${total.toFixed(2)} €</span></div>
 `;
 
 return total;
@@ -200,7 +182,7 @@ return total;
 const modal = document.getElementById("reservationModal");
 const summary = document.getElementById("reservationSummary");
 
-document.getElementById("checkoutButton").onclick = () =>{
+document.getElementById("checkoutButton").onclick = () => {
 
 const total = updateBilling();
 
@@ -212,38 +194,26 @@ return;
 }
 
 summary.innerHTML = `
-
-Du <b>${startDate.toLocaleDateString("fr-FR")}</b>
-au <b>${endDate.toLocaleDateString("fr-FR")}</b>
-
-<br>
-
-${adults} adulte(s) / ${children} enfant(s)
-
-<br>
-
+Du <b>${startDate.toLocaleDateString("fr-FR")}</b> au <b>${endDate.toLocaleDateString("fr-FR")}</b><br>
+${adults} adulte(s) / ${children} enfant(s)<br>
 <b>Total estimé : ${total.toFixed(2)} €</b>
-
 `;
 
-modal.style.display="block";
+modal.style.display = "block";
 
 };
 
 document.querySelector(".close").onclick = () => modal.style.display="none";
 
-window.onclick = e =>{
-
+window.onclick = e => {
 if(e.target == modal) modal.style.display="none";
-
 }
 
-document.getElementById("confirmBooking").onclick = () =>{
+document.getElementById("confirmBooking").onclick = () => {
 
 const subject = encodeURIComponent("Réservation Villa CABOUA");
 
 const body = encodeURIComponent(
-
 `Bonjour,
 
 Je souhaite réserver la Villa CABOUA :
@@ -254,18 +224,17 @@ Adultes : ${adults}
 Enfants : ${children}
 
 Merci.`
-
 );
 
-window.location.href=`mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
+window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
 
 modal.style.display="none";
 
 };
 
-document.getElementById("whatsappFloat").onclick = () =>{
+document.getElementById("whatsappFloat").onclick = () => {
 
-let msg = "Bonjour je souhaite des infos sur Villa CABOUA";
+let msg = "Bonjour je souhaite des infos pour Villa CABOUA";
 
 if(startDate && endDate){
 

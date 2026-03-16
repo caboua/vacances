@@ -1,53 +1,55 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
+
+const CALENDAR_ID = "a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75@group.calendar.google.com";
+
+const API_KEY = "AIzaSyC8Vpze8e4-Mv3D5boiNszUj5-GIfIV5Vg";
 
 const calendarInput = document.getElementById("calendar");
 
-const AIRBNB_ICAL =
-"https://www.airbnb.fr/calendar/ical/1637653042244841736.ics";
+async function fetchBusyDates(){
 
-const proxy =
-"https://api.allorigins.win/raw?url=" + encodeURIComponent(AIRBNB_ICAL);
+const today = new Date();
 
+const maxDate = new Date();
 
-async function getBusyDates(){
+maxDate.setMonth(today.getMonth()+12);
+
+const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${today.toISOString()}&timeMax=${maxDate.toISOString()}&singleEvents=true&orderBy=startTime`;
 
 try{
 
-const res = await fetch(proxy);
+const res = await fetch(url);
 
-const text = await res.text();
+const data = await res.json();
 
-const events = text.split("BEGIN:VEVENT");
+const disabledDates = [];
 
-const disabled = [];
+if(data.items){
 
-events.forEach(event => {
+data.items.forEach(event=>{
 
-const startMatch = event.match(/DTSTART.*:(\d{8})/);
-const endMatch = event.match(/DTEND.*:(\d{8})/);
+let start = new Date(event.start.date || event.start.dateTime);
 
-if(startMatch && endMatch){
+let end = new Date(event.end.date || event.end.dateTime);
 
-const start = parseDate(startMatch[1]);
-const end = parseDate(endMatch[1]);
+for(let d = new Date(start); d < end; d.setDate(d.getDate()+1)){
 
-for(let d=new Date(start); d<end; d.setDate(d.getDate()+1)){
-
-disabled.push(new Date(d));
-
-}
+disabledDates.push(new Date(d));
 
 }
 
 });
 
-return disabled;
+}
+
+return disabledDates;
 
 }
 
-catch(e){
+catch(err){
 
-console.error("Erreur calendrier Airbnb",e);
+console.error("Erreur API Google Calendar",err);
+
 return [];
 
 }
@@ -55,27 +57,38 @@ return [];
 }
 
 
-function parseDate(str){
+async function initCalendar(){
 
-const y = str.substring(0,4);
-const m = str.substring(4,6)-1;
-const d = str.substring(6,8);
-
-return new Date(y,m,d);
-
-}
-
-
-const busyDates = await getBusyDates();
+const busyDates = await fetchBusyDates();
 
 flatpickr(calendarInput,{
 
 locale:"fr",
+
 mode:"range",
+
 dateFormat:"d/m/Y",
+
 minDate:"today",
-disable:busyDates
+
+disable:busyDates,
+
+onChange:function(selectedDates){
+
+if(selectedDates.length === 2){
+
+const event = new Event("change");
+
+calendarInput.dispatchEvent(event);
+
+}
+
+}
 
 });
+
+}
+
+initCalendar();
 
 });

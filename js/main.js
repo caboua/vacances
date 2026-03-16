@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 const calendarInput = document.getElementById("calendar");
 
 const AIRBNB_ICAL =
-"https://www.airbnb.fr/calendar/ical/1637653042244841736.ics?t=b597fb5a299a46d589ae14b6b03e3b13";
+"https://www.airbnb.fr/calendar/ical/1637653042244841736.ics";
 
 const proxy =
 "https://api.allorigins.win/raw?url=" + encodeURIComponent(AIRBNB_ICAL);

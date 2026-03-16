@@ -10,12 +10,14 @@ a { text-decoration: none; }
 
 /* === HEADER HERO === */
 header {
-    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../images/fond.jpg') center center / cover no-repeat;
+    background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url("../images/fond.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     color: white;
     text-align: center;
-    padding: 120px 20px; /* réduit un peu la hauteur pour que ce soit plus harmonieux */
-    min-height: 500px; /* garantit une hauteur suffisante pour l’image */
-    background-attachment: fixed; /* optionnel : effet parallax léger */
+    padding: 120px 20px;
+    min-height: 400px;
 }
 
 

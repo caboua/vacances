@@ -19,46 +19,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const billing = document.getElementById("billing");
 
   // ===== FETCH DATES OCCUPÉES =====
+async function fetchBusyDates(){
 
-  async function fetchBusyDates(){
+  const res = await fetch("get-airbnb-calendar.php");
 
-    const today = new Date();
-    const maxDate = new Date();
-    maxDate.setMonth(today.getMonth() + 12);
+  const data = await res.json();
 
-    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${today.toISOString()}&timeMax=${maxDate.toISOString()}&singleEvents=true&orderBy=startTime`;
+  const disabled = [];
 
-    try{
+  data.forEach(event => {
 
-      const res = await fetch(url);
-      const data = await res.json();
+    let start = new Date(event.start);
+    let end = new Date(event.end);
 
-      const disabled = [];
+    let current = new Date(start);
 
-      if(data.items){
+    while(current < end){
 
-        data.items.forEach(event => {
+      disabled.push(new Date(current));
 
-          const start = new Date(event.start.date || event.start.dateTime);
-          const end = new Date(event.end.date || event.end.dateTime);
+      current.setDate(current.getDate() + 1);
 
-          let current = new Date(start);
+    }
 
-          while(current < end){
+  });
 
-            disabled.push(new Date(current));
+  return disabled;
 
-            current.setDate(current.getDate() + 1);
-
-          }
-
-        });
-
-      }
-
-      return disabled;
-
-    }catch(err){
+}
+  catch(err){
 
       console.error("Erreur Google Calendar API :", err);
       return [];

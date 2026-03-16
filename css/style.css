@@ -67,7 +67,9 @@ header p {
     border-radius: 15px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.05);
 }
-
+input, select, textarea {
+    font-size: 16px;
+}
 /* === GALERIE === */
 
 .gallery {

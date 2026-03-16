@@ -1,55 +1,53 @@
-document.addEventListener("DOMContentLoaded", () => {
-
-const CALENDAR_ID = "a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75@group.calendar.google.com";
-
-const API_KEY = "AIzaSyC8Vpze8e4-Mv3D5boiNszUj5-GIfIV5Vg";
+document.addEventListener("DOMContentLoaded", async () => {
 
 const calendarInput = document.getElementById("calendar");
 
-async function fetchBusyDates(){
+const AIRBNB_ICAL =
+"https://www.airbnb.fr/calendar/ical/1637653042244841736.ics?t=b597fb5a299a46d589ae14b6b03e3b13";
 
-const today = new Date();
+const proxy =
+"https://api.allorigins.win/raw?url=" + encodeURIComponent(AIRBNB_ICAL);
 
-const maxDate = new Date();
 
-maxDate.setMonth(today.getMonth()+12);
-
-const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${today.toISOString()}&timeMax=${maxDate.toISOString()}&singleEvents=true&orderBy=startTime`;
+async function getBusyDates(){
 
 try{
 
-const res = await fetch(url);
+const res = await fetch(proxy);
 
-const data = await res.json();
+const text = await res.text();
 
-const disabledDates = [];
+const events = text.split("BEGIN:VEVENT");
 
-if(data.items){
+const disabled = [];
 
-data.items.forEach(event=>{
+events.forEach(event => {
 
-let start = new Date(event.start.date || event.start.dateTime);
+const startMatch = event.match(/DTSTART.*:(\d{8})/);
+const endMatch = event.match(/DTEND.*:(\d{8})/);
 
-let end = new Date(event.end.date || event.end.dateTime);
+if(startMatch && endMatch){
 
-for(let d = new Date(start); d < end; d.setDate(d.getDate()+1)){
+const start = parseDate(startMatch[1]);
+const end = parseDate(endMatch[1]);
 
-disabledDates.push(new Date(d));
+for(let d=new Date(start); d<end; d.setDate(d.getDate()+1)){
+
+disabled.push(new Date(d));
+
+}
 
 }
 
 });
 
-}
-
-return disabledDates;
+return disabled;
 
 }
 
-catch(err){
+catch(e){
 
-console.error("Erreur API Google Calendar",err);
-
+console.error("Erreur calendrier Airbnb",e);
 return [];
 
 }
@@ -57,38 +55,27 @@ return [];
 }
 
 
-async function initCalendar(){
+function parseDate(str){
 
-const busyDates = await fetchBusyDates();
+const y = str.substring(0,4);
+const m = str.substring(4,6)-1;
+const d = str.substring(6,8);
+
+return new Date(y,m,d);
+
+}
+
+
+const busyDates = await getBusyDates();
 
 flatpickr(calendarInput,{
 
 locale:"fr",
-
 mode:"range",
-
 dateFormat:"d/m/Y",
-
 minDate:"today",
-
-disable:busyDates,
-
-onChange:function(selectedDates){
-
-if(selectedDates.length === 2){
-
-const event = new Event("change");
-
-calendarInput.dispatchEvent(event);
-
-}
-
-}
+disable:busyDates
 
 });
-
-}
-
-initCalendar();
 
 });

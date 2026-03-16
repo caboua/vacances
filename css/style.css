@@ -1,6 +1,6 @@
-/* Reset & Base */
+/* Reset */
 
-body {
+body{
 margin:0;
 font-family:'Segoe UI',sans-serif;
 background:#f6f6f6;
@@ -18,7 +18,7 @@ padding-left:20px;
 }
 
 
-/* Header */
+/* HEADER */
 
 header{
 
@@ -69,7 +69,7 @@ background:#cf711f;
 }
 
 
-/* Container */
+/* CONTAINER */
 
 .container{
 
@@ -98,7 +98,7 @@ min-width:250px;
 }
 
 
-/* Sections */
+/* SECTIONS */
 
 .section{
 
@@ -115,7 +115,7 @@ box-shadow:0 8px 25px rgba(0,0,0,0.05);
 }
 
 
-/* Galerie */
+/* GALERIE */
 
 .gallery{
 
@@ -142,7 +142,7 @@ border-radius:12px;
 }
 
 
-/* Equipements */
+/* ÉQUIPEMENTS */
 
 .equip-grid{
 
@@ -171,7 +171,7 @@ color:#27ae60;
 }
 
 
-/* Calendrier */
+/* CALENDRIER */
 
 #calendar{
 
@@ -186,7 +186,215 @@ border:1px solid #ccc;
 }
 
 
-/* Responsive */
+/* COMPTEUR */
+
+.counter{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+margin-top:5px;
+
+}
+
+.counter button{
+
+width:32px;
+
+height:32px;
+
+border-radius:50%;
+
+border:1px solid #ccc;
+
+background:white;
+
+cursor:pointer;
+
+}
+
+.counter button:disabled{
+opacity:0.4;
+cursor:not-allowed;
+}
+
+
+/* BOUTON RÉSERVER */
+
+#checkoutButton{
+
+width:100%;
+
+padding:12px;
+
+background:#e67e22;
+
+border:none;
+
+border-radius:10px;
+
+color:white;
+
+font-weight:bold;
+
+margin-top:10px;
+
+cursor:pointer;
+
+font-size:16px;
+
+}
+
+#checkoutButton:hover{
+background:#cf711f;
+}
+
+
+/* FACTURATION */
+
+#billing{
+
+margin-top:15px;
+
+background:#fdfdfd;
+
+padding:15px;
+
+border-radius:10px;
+
+box-shadow:0 3px 10px rgba(0,0,0,0.05);
+
+}
+
+.billing-line{
+
+display:flex;
+
+justify-content:space-between;
+
+margin-bottom:6px;
+
+}
+
+.billing-line.total{
+
+font-weight:bold;
+
+font-size:17px;
+
+}
+
+
+/* MODAL */
+
+.modal{
+
+display:none;
+
+position:fixed;
+
+z-index:2000;
+
+left:0;
+
+top:0;
+
+width:100%;
+
+height:100%;
+
+overflow:auto;
+
+background-color:rgba(0,0,0,0.5);
+
+}
+
+.modal-content{
+
+background-color:#fff;
+
+margin:10% auto;
+
+padding:20px;
+
+border-radius:12px;
+
+max-width:400px;
+
+text-align:center;
+
+}
+
+.close{
+
+float:right;
+
+font-size:24px;
+
+cursor:pointer;
+
+}
+
+
+/* WHATSAPP FLOTTANT */
+
+.whatsapp-float{
+
+position:fixed;
+
+bottom:20px;
+
+right:20px;
+
+width:65px;
+
+height:65px;
+
+background:#25D366;
+
+color:white;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:32px;
+
+box-shadow:0 8px 25px rgba(0,0,0,0.3);
+
+cursor:pointer;
+
+z-index:1000;
+
+transition:0.3s;
+
+animation:pulse 2s infinite;
+
+}
+
+.whatsapp-float:hover{
+transform:scale(1.1);
+}
+
+@keyframes pulse{
+
+0%{box-shadow:0 0 0 0 rgba(37,211,102,0.6);}
+
+70%{box-shadow:0 0 0 15px rgba(37,211,102,0);}
+
+100%{box-shadow:0 0 0 0 rgba(37,211,102,0);}
+
+}
+
+
+/* RESPONSIVE */
 
 @media(max-width:900px){
 

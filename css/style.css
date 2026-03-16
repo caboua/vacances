@@ -289,6 +289,15 @@ label {
 
 }
 
+@media(max-width:900px){
+
+header{
+
+background-attachment: scroll;
+
+}
+
+}
 @media(max-width:600px){
 
 header{

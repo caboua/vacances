@@ -8,79 +8,77 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // CONFIG
-  const CALENDAR_ID = 'a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75@group.calendar.google.com';
-  const API_KEY = 'AIzaSyC8Vpze8e4-Mv3D5boiNszUj5-GIfIV5Vg';
-
-  const NIGHT_PRICE = 140;
-  const CLEANING = 120;
-  const TAX_PER_ADULT = 1.5;
-  const MIN_NIGHTS = 4;
-  const MAX_ADULTS = 6;
-  const MAX_TOTAL = 8;
+  // Détection mobile simple
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  calendarInput.dataset.mobile = isMobile;
 
   let startDate, endDate;
-  let adults = 2;
-  let children = 0;
+  let adults = 2, children = 0;
 
-  // ===== GOOGLE CALENDAR =====
-  async function fetchBusyDates(){
-    const today = new Date();
-    const maxDate = new Date();
-    maxDate.setMonth(today.getMonth() + 12);
+  const NIGHT_PRICE = 140, CLEANING = 120, TAX_PER_ADULT = 1.5;
+  const MIN_NIGHTS = 4, MAX_ADULTS = 6, MAX_TOTAL = 8;
 
-    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${today.toISOString()}&timeMax=${maxDate.toISOString()}&singleEvents=true&orderBy=startTime`;
+  // ===== PC : Flatpickr avec Google Calendar =====
+  if(!isMobile){
+    const CALENDAR_ID = 'a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75@group.calendar.google.com';
+    const API_KEY = 'AIzaSyC8Vpze8e4-Mv3D5boiNszUj5-GIfIV5Vg';
 
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      const disabled = [];
+    async function fetchBusyDates(){
+      const today = new Date();
+      const maxDate = new Date();
+      maxDate.setMonth(today.getMonth() + 12);
 
-      if(data.items){
-        data.items.forEach(event => {
-          const start = new Date(event.start.date || event.start.dateTime);
-          const end = new Date(event.end.date || event.end.dateTime);
-          let current = new Date(start);
-          while(current < end){
-            // Convert to YYYY-MM-DD string for Flatpickr
-            disabled.push(current.toISOString().split('T')[0]);
-            current.setDate(current.getDate()+1);
-          }
-        });
-      }
-      return disabled;
-    } catch(err){
-      console.error("Erreur Google Calendar:", err);
-      return [];
-    }
-  }
+      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${today.toISOString()}&timeMax=${maxDate.toISOString()}&singleEvents=true&orderBy=startTime`;
 
-  // ===== INIT CALENDAR =====
-  async function initCalendar(){
-    calendarInput.disabled = true; // Empêche l'ouverture avant init
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const disabled = [];
 
-    const busyDates = await fetchBusyDates();
-
-    flatpickr(calendarInput, {
-      locale: "fr",
-      mode: "range",
-      dateFormat: "d/m/Y",
-      minDate: "today",
-      disable: busyDates,
-      // disableMobile: true, // Commenté pour permettre calendrier natif mobile
-      onChange: function(selectedDates){
-        if(selectedDates.length === 2){
-          startDate = selectedDates[0];
-          endDate = selectedDates[1];
-          updateBilling();
+        if(data.items){
+          data.items.forEach(event => {
+            const start = new Date(event.start.date || event.start.dateTime);
+            const end = new Date(event.end.date || event.end.dateTime);
+            let current = new Date(start);
+            while(current < end){
+              disabled.push(current.toISOString().split('T')[0]);
+              current.setDate(current.getDate()+1);
+            }
+          });
         }
+        return disabled;
+      } catch(err){
+        console.error("Erreur Google Calendar:", err);
+        return [];
       }
-    });
+    }
 
-    calendarInput.disabled = false; // Activation après init
+    async function initCalendar(){
+      calendarInput.disabled = true;
+      const busyDates = await fetchBusyDates();
+      flatpickr(calendarInput, {
+        locale: "fr",
+        mode: "range",
+        dateFormat: "d/m/Y",
+        minDate: "today",
+        disable: busyDates,
+        onChange: function(selectedDates){
+          if(selectedDates.length === 2){
+            startDate = selectedDates[0];
+            endDate = selectedDates[1];
+            updateBilling();
+          }
+        }
+      });
+      calendarInput.disabled = false;
+    }
+
+    initCalendar();
+  } else {
+    // ===== MOBILE : désactive Flatpickr, utilisateur se réfère à l'iframe =====
+    calendarInput.placeholder = "Vérifiez l'iframe pour les disponibilités";
+    calendarInput.readOnly = true;
   }
-
-  initCalendar();
 
   // ===== COMPTEURS =====
   const adultCount = document.getElementById("adultCount");

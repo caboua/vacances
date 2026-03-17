@@ -1,4 +1,4 @@
-/* === style version 8 === */
+/* === style version 7 === */
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
@@ -289,15 +289,6 @@ label {
 
 }
 
-@media(max-width:900px){
-
-header{
-
-background-attachment: scroll;
-
-}
-
-}
 @media(max-width:600px){
 
 header{

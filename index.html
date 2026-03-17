@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
 <title>Villa CABOUA – Location en Guadeloupe</title>
 
 <link rel="stylesheet" href="css/style.css">
@@ -75,17 +74,13 @@
     <div class="section" id="disponibilites">
       <h2>Disponibilités</h2>
 
-      <iframe
-      src="https://calendar.google.com/calendar/embed?src=a42682891ff3cdeba7e8d30c8deb71cd3e263aaf9d3d84b61cc4efb52f5a2c75%40group.calendar.google.com&ctz=America%2FGuadeloupe"
-      style="border:0"
-      width="100%"
-      height="400"
-      frameborder="0"
-      scrolling="no">
-      </iframe>
+      <!-- Calendrier Google directement -->
+      <div style="width:100%; overflow:hidden; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+        <iframe src="https://calendar.google.com/calendar/u/0/embed?src=ds98qjiuc1uqumr9dc1nnaoag24pqfsa@import.calendar.google.com&ctz=America%2FNew_York"
+        style="border:0" width="100%" height="500" frameborder="0" scrolling="no"></iframe>
+      </div>
 
       <div style="display:flex; gap:20px; margin-top:15px; flex-wrap:wrap;">
-
         <div style="flex:1; min-width:200px;">
           <label>Dates</label>
           <input id="calendar" placeholder="Cliquez pour choisir les dates" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
@@ -110,7 +105,6 @@
           <p class="limit-info">Max 8 pers. (6 adultes max)</p>
           <button id="checkoutButton" style="margin-top:10px;">Réserver maintenant</button>
         </div>
-
       </div>
     </div>
 

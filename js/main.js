@@ -1,169 +1,144 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-const NIGHT_PRICE = 140;
-const CLEANING = 120;
-const TAX_PER_ADULT = 1.5;
-const MIN_NIGHTS = 4;
-const MAX_ADULTS = 6;
-const MAX_TOTAL = 8;
+  const NIGHT_PRICE = 140;
+  const CLEANING = 120;
+  const TAX_PER_ADULT = 1.5;
+  const MIN_NIGHTS = 4;
+  const MAX_ADULTS = 6;
+  const MAX_TOTAL = 8;
 
-let startDate = null;
-let endDate = null;
-let adults = 2;
-let children = 0;
+  let startDate, endDate, adults = 2, children = 0;
 
-const calendarInput = document.getElementById("calendar");
-const billing = document.getElementById("billing");
+  const calendarInput = document.getElementById("calendar");
+  const billing = document.getElementById("billing");
 
-// ===== CALENDAR =====
-flatpickr(calendarInput,{
-    locale:"fr",
-    mode:"range",
-    dateFormat:"d/m/Y",
-    minDate:"today",
-    disableMobile:true,
-    onChange:function(selectedDates){
-        if(selectedDates.length === 2){
-            startDate = selectedDates[0];
-            endDate = selectedDates[1];
-            updateBilling();
-        }
+  // ===== DATES BLOQUEES (exemple à remplacer par vos dates Airbnb) =====
+  // Format yyyy-mm-dd
+  const blockedDates = [
+    "2026-03-20",
+    "2026-03-21",
+    "2026-03-22",
+    "2026-03-25",
+    "2026-03-26"
+  ];
+
+  // ===== Initialisation Flatpickr =====
+  flatpickr(calendarInput, {
+    locale: "fr",
+    mode: "range",
+    dateFormat: "d/m/Y",
+    minDate: "today",
+    disable: blockedDates,
+    onChange: function(selectedDates) {
+      if (selectedDates.length === 2) {
+        startDate = selectedDates[0];
+        endDate = selectedDates[1];
+        updateBilling();
+      }
     }
-});
+  });
 
-// ===== COMPTEURS =====
-const adultCount = document.getElementById("adultCount");
-const childCount = document.getElementById("childCount");
+  // ===== Compteurs =====
+  const adultCountEl = document.getElementById("adultCount");
+  const childCountEl = document.getElementById("childCount");
 
-function updateButtons(){
+  function updateButtons() {
     document.getElementById("adultMinus").disabled = adults <= 1;
     document.getElementById("adultPlus").disabled = adults >= MAX_ADULTS || adults + children >= MAX_TOTAL;
     document.getElementById("childMinus").disabled = children <= 0;
     document.getElementById("childPlus").disabled = adults + children >= MAX_TOTAL;
-}
+  }
 
-function changeAdult(n){
-    let newVal = adults + n;
-    if(newVal < 1 || newVal > MAX_ADULTS || newVal + children > MAX_TOTAL) return;
-    adults = newVal;
-    adultCount.textContent = adults;
+  function changeAdult(n) {
+    let na = adults + n;
+    if (na < 1 || na > MAX_ADULTS || na + children > MAX_TOTAL) return;
+    adults = na;
+    adultCountEl.textContent = adults;
     updateButtons();
     updateBilling();
-}
+  }
 
-function changeChild(n){
-    let newVal = children + n;
-    if(newVal < 0 || adults + newVal > MAX_TOTAL) return;
-    children = newVal;
-    childCount.textContent = children;
+  function changeChild(n) {
+    let nc = children + n;
+    if (nc < 0 || adults + nc > MAX_TOTAL) return;
+    children = nc;
+    childCountEl.textContent = children;
     updateButtons();
     updateBilling();
-}
+  }
 
-document.getElementById("adultMinus").onclick = () => changeAdult(-1);
-document.getElementById("adultPlus").onclick = () => changeAdult(1);
-document.getElementById("childMinus").onclick = () => changeChild(-1);
-document.getElementById("childPlus").onclick = () => changeChild(1);
+  document.getElementById("adultMinus").onclick = () => changeAdult(-1);
+  document.getElementById("adultPlus").onclick = () => changeAdult(1);
+  document.getElementById("childMinus").onclick = () => changeChild(-1);
+  document.getElementById("childPlus").onclick = () => changeChild(1);
+  updateButtons();
 
-updateButtons();
-
-// ===== FACTURATION =====
-function updateBilling(){
-
-    if(!startDate || !endDate){
-        billing.innerHTML = "";
-        return;
+  // ===== Facturation =====
+  function updateBilling() {
+    if (!startDate || !endDate) {
+      billing.innerHTML = '';
+      return;
     }
-
-    const nights = Math.round((endDate - startDate)/(1000*60*60*24));
-
-    if(nights < MIN_NIGHTS){
-        billing.innerHTML = `<p style="color:red;">Minimum ${MIN_NIGHTS} nuits</p>`;
-        return 0;
+    let nights = Math.round((endDate - startDate)/(1000*60*60*24));
+    if (nights < MIN_NIGHTS) {
+      billing.innerHTML = `<p style="color:red;">Minimum ${MIN_NIGHTS} nuits</p>`;
+      return;
     }
-
-    const subtotal = nights * NIGHT_PRICE;
-    const tax = adults * TAX_PER_ADULT;
-    const total = subtotal + CLEANING + tax;
+    let subtotal = nights * NIGHT_PRICE;
+    let tax = adults * TAX_PER_ADULT;
+    let total = subtotal + CLEANING + tax;
 
     billing.innerHTML = `
-        <div class="billing-line"><span>${nights} nuits</span><span>${subtotal.toFixed(2)} €</span></div>
-        <div class="billing-line"><span>Taxe séjour</span><span>${tax.toFixed(2)} €</span></div>
-        <div class="billing-line"><span>Ménage</span><span>${CLEANING.toFixed(2)} €</span></div>
-        <hr>
-        <div class="billing-line total"><span>Total</span><span>${total.toFixed(2)} €</span></div>
+      <div class="billing-line"><span>${nights} nuits</span><span>${subtotal.toFixed(2)} €</span></div>
+      <div class="billing-line"><span>Taxe séjour</span><span>${tax.toFixed(2)} €</span></div>
+      <div class="billing-line"><span>Ménage</span><span>${CLEANING.toFixed(2)} €</span></div>
+      <hr>
+      <div class="billing-line total"><span>Total</span><span>${total.toFixed(2)} €</span></div>
     `;
-
     return total;
-}
+  }
 
-// ===== MODAL =====
-const modal = document.getElementById("reservationModal");
-const summary = document.getElementById("reservationSummary");
+  // ===== Modal réservation =====
+  const modal = document.getElementById("reservationModal");
+  const summary = document.getElementById("reservationSummary");
+  const closeBtn = document.querySelector(".close");
+  const confirmBtn = document.getElementById("confirmBooking");
 
-document.getElementById("checkoutButton").addEventListener("click", () => {
-
-    if (!startDate || !endDate) {
-        alert("Sélectionnez vos dates");
-        return;
-    }
-
+  document.getElementById("checkoutButton").addEventListener("click", () => {
     const total = updateBilling();
-
-    if (!total) {
-        alert(`Minimum ${MIN_NIGHTS} nuits`);
-        return;
+    if (!startDate || !endDate || !total) { 
+      alert(`Sélectionnez au moins ${MIN_NIGHTS} nuits valides`); 
+      return; 
     }
-
     summary.innerHTML = `
-        Du <b>${startDate.toLocaleDateString("fr-FR")}</b> au <b>${endDate.toLocaleDateString("fr-FR")}</b><br>
-        ${adults} adulte(s), ${children} enfant(s)<br>
-        <b>Total : ${total.toFixed(2)} €</b>
+      Du <b>${startDate.toLocaleDateString("fr-FR")}</b> au <b>${endDate.toLocaleDateString("fr-FR")}</b><br>
+      <b>${adults}</b> adulte(s), <b>${children}</b> enfant(s)<br>
+      Total estimé : <b>${total.toFixed(2)} €</b>
     `;
-
     modal.style.display = "block";
-});
+  });
 
-document.querySelector(".close").onclick = () => modal.style.display = "none";
+  closeBtn.onclick = () => modal.style.display = "none";
+  window.onclick = e => { if (e.target == modal) modal.style.display = "none"; }
 
-window.onclick = e => {
-    if(e.target == modal) modal.style.display = "none";
-};
-
-// ===== EMAIL AVEC MESSAGE =====
-document.getElementById("confirmBooking").onclick = () => {
-
-    const start = startDate.toLocaleDateString("fr-FR");
-    const end = endDate.toLocaleDateString("fr-FR");
-
-    const message = `
-Bonjour,
-
-Nous souhaitons réserver la Villa CABOUA.
-
-Dates : du ${start} au ${end}
-Voyageurs : ${adults} adulte(s) et ${children} enfant(s)
-
-Merci de nous confirmer la disponibilité.
-
-Cordialement
-    `;
-
-    window.location.href = `mailto:villa.caboua@gmail.com?subject=Demande de réservation Villa CABOUA&body=${encodeURIComponent(message)}`;
-
+  confirmBtn.onclick = () => {
+    const subject = encodeURIComponent("Réservation Villa CABOUA");
+    const body = encodeURIComponent(
+      `Bonjour,\n\nJe souhaite réserver Villa CABOUA :\n`+
+      `Dates : ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}\n`+
+      `Adultes : ${adults}\nEnfants : ${children}\n\nMerci.`
+    );
+    window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
     modal.style.display = "none";
-};
+  }
 
-// ===== WHATSAPP =====
-document.getElementById("whatsappFloat").onclick = () => {
-
-    let msg = "Bonjour je souhaite des infos pour Villa CABOUA";
-
+  // ===== WhatsApp =====
+  document.getElementById("whatsappFloat").addEventListener("click", () => {
+    let msg = `Bonjour, je souhaite des infos pour Villa CABOUA.`;
     if(startDate && endDate){
-        msg = `Bonjour, je souhaite faire une réservation du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")} pour ${adults} adulte(s) et ${children} enfant(s)`;
+      msg = `Bonjour, je souhaite réserver Villa CABOUA du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")} pour ${adults} adulte(s) et ${children} enfant(s).`;
     }
-
     window.open(`https://wa.me/590690520616?text=${encodeURIComponent(msg)}`, "_blank");
-};
+  });
 
 });

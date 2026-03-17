@@ -130,13 +130,33 @@ window.onclick = e => {
     if(e.target == modal) modal.style.display = "none";
 };
 
+// ===== EMAIL AVEC MESSAGE =====
 document.getElementById("confirmBooking").onclick = () => {
-    window.location.href = `mailto:villa.caboua@gmail.com`;
+
+    const start = startDate.toLocaleDateString("fr-FR");
+    const end = endDate.toLocaleDateString("fr-FR");
+
+    const message = `
+Bonjour,
+
+Nous souhaitons réserver la Villa CABOUA.
+
+Dates : du ${start} au ${end}
+Voyageurs : ${adults} adulte(s) et ${children} enfant(s)
+
+Merci de nous confirmer la disponibilité.
+
+Cordialement
+    `;
+
+    window.location.href = `mailto:villa.caboua@gmail.com?subject=Demande de réservation Villa CABOUA&body=${encodeURIComponent(message)}`;
+
     modal.style.display = "none";
 };
 
 // ===== WHATSAPP =====
 document.getElementById("whatsappFloat").onclick = () => {
+
     let msg = "Bonjour je souhaite des infos pour Villa CABOUA";
 
     if(startDate && endDate){

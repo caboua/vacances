@@ -13,7 +13,7 @@ a { text-decoration: none; }
 header {
     background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
                 url('../images/fond.jpg') center center no-repeat;
-    background-size: cover; /* image pleine largeur et hauteur */
+    background-size: cover;
     color: white;
     text-align: center;
     padding: 120px 20px;

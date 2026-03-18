@@ -8,16 +8,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("checkoutButton");
 
   // ========================
-  // 📅 CALENDRIER FLATPICKR - MOIS ENTIER
+  // 📅 CALENDRIER FLATPICKR - MOIS ENTIER EN FRANÇAIS
   // ========================
   const fp = flatpickr("#calendar", {
-    locale: "fr",
+    locale: flatpickr.l10ns.fr, // force la langue française
     mode: "range",
-    inline: true,           // Affiche tout le mois directement
+    inline: true,               // affiche le mois entier
     minDate: "today",
     dateFormat: "d/m/Y",
-    showMonths: 1,          // Nombre de mois visibles (1 pour un mois)
-    disableMobile: true,    // empêche le zoom mobile
+    showMonths: 1,              // un mois visible
+    disableMobile: true,        // empêche le zoom sur mobile
     onChange: function(selectedDates) {
       if (selectedDates.length === 2) {
         startDate = selectedDates[0];
@@ -44,13 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
   )
   .then(res => res.text())
   .then(text => {
-
     const lines = text.split("\n");
     let start, end;
 
     lines.forEach(line => {
-      if (line.includes("DTSTART")) start = line.split(":")[1].trim();
-      if (line.includes("DTEND")) {
+      if (line.startsWith("DTSTART")) start = line.split(":")[1].trim();
+      if (line.startsWith("DTEND")) {
         end = line.split(":")[1].trim();
 
         let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
@@ -64,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     fp.set("disable", blockedDates);
-
   })
   .catch(err => console.log("Erreur ICS :", err));
 

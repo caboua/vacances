@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
 <title>Villa CABOUA – Location en Guadeloupe</title>
 
 <link rel="stylesheet" href="css/style.css">
@@ -12,7 +10,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 </head>
-
 <body>
 
 <header>
@@ -24,78 +21,94 @@
 </header>
 
 <div class="container">
-<div class="left">
+  <div class="left">
 
-<!-- Description -->
-<div class="section">
-<h2>Description</h2>
-<p>Villa moderne située en Guadeloupe, idéale pour un séjour en famille.</p>
-<ul>
-<li>1 Suite parentale</li>
-<li>2 chambres climatisées</li>
-<li>Terrasse et jardin tropical</li>
-</ul>
+    <!-- Description -->
+    <div class="section">
+      <h2>Description</h2>
+      <p>Villa moderne située en Guadeloupe, idéale pour un séjour en famille. Terrasse aménagée, jardin tropical, environnement calme.</p>
+      <ul>
+        <li>1 Suite parentale avec salle d’eau et terrasse</li>
+        <li>2 chambres doubles climatisées</li>
+        <li>Canapé convertible</li>
+        <li>Terrasse et jardin tropical</li>
+      </ul>
+    </div>
+
+    <!-- Galerie -->
+    <div class="section">
+      <h2>Galerie</h2>
+      <div class="gallery">
+        <img src="images/salon.jpeg" alt="Salon">
+        <img src="images/cuisine.jpeg" alt="Cuisine">
+        <img src="images/chambre1.jpeg" alt="Chambre 1">
+        <img src="images/chambre2.jpeg" alt="Chambre 2">
+        <img src="images/chambreparentale.jpeg" alt="Chambre parentale">
+        <img src="images/terrasse.jpeg" alt="Terrasse">
+        <img src="images/sb1.jpeg" alt="Salle de bain 1">
+        <img src="images/sb1.1.jpeg" alt="Salle de bain 1">
+        <img src="images/sb1.2.jpeg" alt="Salle de bain 1">
+        <img src="images/sb2.jpeg" alt="Salle de bain 2">
+      </div>
+    </div>
+
+    <!-- Équipements -->
+    <div class="section">
+      <h2>Équipements</h2>
+      <div class="equip-grid">
+        <div class="equip-item"><i class="fa-solid fa-wifi"></i> Internet haut débit</div>
+        <div class="equip-item"><i class="fa-solid fa-snowflake"></i> Climatisation</div>
+        <div class="equip-item"><i class="fa-solid fa-square-parking"></i> Parking privé</div>
+        <div class="equip-item"><i class="fa-solid fa-bed"></i> 3 chambres confortables</div>
+        <div class="equip-item"><i class="fa-solid fa-tv"></i> Télévision écran plat</div>
+        <div class="equip-item"><i class="fa-solid fa-utensils"></i> Cuisine équipée</div>
+        <div class="equip-item"><i class="fa-solid fa-seedling"></i> Jardin tropical</div>
+        <div class="equip-item"><i class="fa-solid fa-water-ladder"></i> Terrasse aménagée</div>
+      </div>
+    </div>
+
+    <!-- Disponibilités -->
+    <div class="section" id="disponibilites">
+      <h2>Disponibilités</h2>
+
+      <input id="calendar" placeholder="Cliquez pour choisir les dates">
+
+      <div style="display:flex; gap:20px; margin-top:15px; flex-wrap:wrap;">
+        <div style="flex:1; min-width:200px;">
+          <div id="billing"></div>
+        </div>
+        <div style="min-width:150px;">
+          <label>Adultes</label>
+          <div class="counter">
+            <button id="adultMinus">−</button>
+            <span id="adultCount">2</span>
+            <button id="adultPlus">+</button>
+          </div>
+
+          <label>Enfants</label>
+          <div class="counter">
+            <button id="childMinus">−</button>
+            <span id="childCount">0</span>
+            <button id="childPlus">+</button>
+          </div>
+
+          <p class="limit-info">Max 8 pers. (6 adultes max)</p>
+          <button id="checkoutButton">Réserver maintenant</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<!-- Galerie -->
-<div class="section">
-<h2>Galerie</h2>
-<div class="gallery">
-<img src="images/salon.jpeg">
-<img src="images/cuisine.jpeg">
-<img src="images/chambre1.jpeg">
-<img src="images/chambre2.jpeg">
-</div>
-</div>
-
-<!-- Disponibilités -->
-<div class="section" id="disponibilites">
-<h2>Disponibilités</h2>
-
-<div class="calendar-wrapper">
-<iframe
-src="https://calendar.google.com/calendar/embed?hl=fr&ctz=America%2FGuadeloupe&mode=MONTH&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&src=dmlsbGEuY2Fib3VhQGdtYWlsLmNvbQ&src=YTQyNjgyODkxZmYzY2RlYmE3ZThkMzBjOGRlYjcxY2QzZTI2M2FhZjlkM2Q4NGI2MWNjNGVmYjUyZjVhMmM3NUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZHM5OHFqaXVjMXVxdW1yOWRjMW5uYW9hZzI0cHFmc2FAaW1wb3J0LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23710076&color=%23d50000&color=%23009688"
-frameborder="0"
-scrolling="no">
-</iframe>
-</div>
-
-<div class="booking-box">
-
-<label>Dates</label>
-<input id="calendar" placeholder="Choisir vos dates">
-
-<div id="billing"></div>
-
-<label>Adultes</label>
-<div class="counter">
-<button id="adultMinus">−</button>
-<span id="adultCount">2</span>
-<button id="adultPlus">+</button>
-</div>
-
-<label>Enfants</label>
-<div class="counter">
-<button id="childMinus">−</button>
-<span id="childCount">0</span>
-<button id="childPlus">+</button>
-</div>
-
-<button id="checkoutButton">Réserver</button>
-
-</div>
-</div>
-
-</div>
-</div>
-
-<!-- Modal -->
+<!-- Modal réservation -->
 <div id="reservationModal" class="modal">
-<div class="modal-content">
-<span class="close">&times;</span>
-<p id="reservationSummary"></p>
-<button id="confirmBooking">Confirmer</button>
-</div>
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Confirmer votre réservation</h2>
+    <p id="reservationSummary"></p>
+    <button id="confirmBooking">Confirmer</button>
+  </div>
 </div>
 
 <a href="#" id="whatsappFloat" class="whatsapp-float">
@@ -103,6 +116,7 @@ scrolling="no">
 </a>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
 <script src="js/main.js"></script>
 
 </body>

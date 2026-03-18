@@ -15,6 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const adultCount = document.getElementById("adultCount");
   const childCount = document.getElementById("childCount");
 
+  const NIGHT_PRICE = 140;
+  const CLEANING_FEE = 120;
+  const TAX_PER_PERSON = 1.5;
+  const MIN_NIGHTS = 4;
+
   // ========================
   // 📅 CALENDRIER FLATPICKR
   // ========================
@@ -74,20 +79,35 @@ document.addEventListener("DOMContentLoaded", () => {
     if(!startDate || !endDate) return;
 
     const nights = Math.round((endDate - startDate)/(1000*60*60*24));
-    const total = nights * (adults * 20 + children * 10); // exemple prix adulte/enfant
+    if(nights < MIN_NIGHTS){
+      billing.innerHTML = `<p style="color:red;">Séjour minimum ${MIN_NIGHTS} nuits</p>`;
+      return;
+    }
+
+    const subtotal = nights * NIGHT_PRICE;
+    const tax = (adults + children) * TAX_PER_PERSON;
+    const total = subtotal + CLEANING_FEE + tax;
 
     billing.innerHTML = `
       <div class="billing-line">
         <span>${nights} nuits</span>
-        <span>${nights * (adults * 20 + children * 10)} €</span>
+        <span>${subtotal} €</span>
       </div>
       <div class="billing-line">
         <span>Adultes: ${adults}</span>
         <span>Enfants: ${children}</span>
       </div>
+      <div class="billing-line">
+        <span>Frais ménage</span>
+        <span>${CLEANING_FEE} €</span>
+      </div>
+      <div class="billing-line">
+        <span>Taxe</span>
+        <span>${tax.toFixed(2)} €</span>
+      </div>
       <div class="billing-line total">
         <span>Total final</span>
-        <span>${total} €</span>
+        <span>${total.toFixed(2)} €</span>
       </div>
     `;
   }
@@ -129,14 +149,24 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const nights = Math.round((endDate - startDate)/(1000*60*60*24));
+    if(nights < MIN_NIGHTS){
+      alert(`Séjour minimum ${MIN_NIGHTS} nuits`);
+      return;
+    }
+
     if(!isRangeAvailable(startDate, endDate)){
       alert("❌ Indisponible pour cette période");
       return;
     }
 
+    const subtotal = nights * NIGHT_PRICE;
+    const tax = (adults + children) * TAX_PER_PERSON;
+    const total = subtotal + CLEANING_FEE + tax;
+
     const subject = encodeURIComponent("Réservation Villa CABOUA");
     const body = encodeURIComponent(
-      `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.\nAdultes: ${adults}\nEnfants: ${children}\nTotal: ${Math.round((endDate - startDate)/(1000*60*60*24)*(adults*20 + children*10))} €`
+      `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.\nAdultes: ${adults}\nEnfants: ${children}\nFrais ménage: ${CLEANING_FEE} €\nTaxe: ${tax.toFixed(2)} €\nTotal: ${total.toFixed(2)} €`
     );
 
     window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;

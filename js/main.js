@@ -8,16 +8,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("checkoutButton");
 
   // ========================
-  // 📅 CALENDRIER FLATPICKR - MOIS ENTIER EN FRANÇAIS
+  // 📅 CALENDRIER (ouvre direct)
   // ========================
   const fp = flatpickr("#calendar", {
-    locale: flatpickr.l10ns.fr, // force la langue française
+    locale: "fr",
     mode: "range",
-    inline: true,               // affiche le mois entier
     minDate: "today",
     dateFormat: "d/m/Y",
-    showMonths: 1,              // un mois visible
-    disableMobile: true,        // empêche le zoom sur mobile
+
     onChange: function(selectedDates) {
       if (selectedDates.length === 2) {
         startDate = selectedDates[0];
@@ -37,19 +35,25 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ========================
-  // 🔴 CHARGER DATES BLOQUEES ICS
+  // 🔴 CHARGER ICS (APRÈS)
   // ========================
   fetch("https://api.allorigins.win/raw?url=" +
     encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
   )
   .then(res => res.text())
   .then(text => {
+
     const lines = text.split("\n");
+
     let start, end;
 
     lines.forEach(line => {
-      if (line.startsWith("DTSTART")) start = line.split(":")[1].trim();
-      if (line.startsWith("DTEND")) {
+
+      if (line.includes("DTSTART")) {
+        start = line.split(":")[1].trim();
+      }
+
+      if (line.includes("DTEND")) {
         end = line.split(":")[1].trim();
 
         let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
@@ -60,11 +64,16 @@ document.addEventListener("DOMContentLoaded", () => {
           s.setDate(s.getDate()+1);
         }
       }
+
     });
 
+    // 🔥 appliquer blocage APRÈS chargement
     fp.set("disable", blockedDates);
+
   })
-  .catch(err => console.log("Erreur ICS :", err));
+  .catch(err => {
+    console.log("Erreur ICS :", err);
+  });
 
   // ========================
   // 🔴 VERIF DISPO
@@ -77,17 +86,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function isRangeAvailable(start, end) {
     let current = new Date(start);
+
     while (current < end) {
       if (isBlocked(current)) return false;
       current.setDate(current.getDate() + 1);
     }
+
     return true;
   }
 
   // ========================
-  // 🔴 BOUTON RESERVER
+  // 🔥 BOUTON RESERVER
   // ========================
   btn.onclick = function(e) {
+
     e.preventDefault();
 
     if (!startDate || !endDate) {
@@ -100,7 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // ✅ OK → mail
     const subject = encodeURIComponent("Réservation Villa CABOUA");
+
     const body = encodeURIComponent(
       `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.`
     );

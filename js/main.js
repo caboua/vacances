@@ -1,12 +1,14 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
-  let startDate, endDate;
+  let startDate = null;
+  let endDate = null;
   let blockedDates = [];
 
   const billing = document.getElementById("billing");
+  const btn = document.getElementById("checkoutButton");
 
   // ========================
-  // 🔴 Récupération ICS
+  // 🔴 CHARGER ICS
   // ========================
   async function fetchBlockedDates() {
     try {
@@ -18,8 +20,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const lines = text.split("\n");
 
-      let start, end;
       let dates = [];
+      let start, end;
 
       lines.forEach(line => {
 
@@ -52,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   blockedDates = await fetchBlockedDates();
 
   // ========================
-  // 📅 Calendrier
+  // 📅 CALENDRIER
   // ========================
   flatpickr("#calendar", {
     locale: "fr",
@@ -80,9 +82,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // ========================
-  // 🔥 VERIFICATION DISPO
+  // 🔴 VERIF DISPO
   // ========================
-  function isDateBlocked(date) {
+  function isBlocked(date) {
     return blockedDates.some(d =>
       new Date(d).toDateString() === new Date(date).toDateString()
     );
@@ -92,9 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let current = new Date(start);
 
     while (current < end) {
-      if (isDateBlocked(current)) {
-        return false;
-      }
+      if (isBlocked(current)) return false;
       current.setDate(current.getDate() + 1);
     }
 
@@ -102,22 +102,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ========================
-  // 🧾 BOUTON RESERVER
+  // 🔥 BOUTON RESERVER (CORRIGÉ)
   // ========================
-  document.getElementById("checkoutButton").addEventListener("click", () => {
+  btn.onclick = function (e) {
+
+    e.preventDefault(); // 🔴 BLOQUE tout envoi automatique
 
     if (!startDate || !endDate) {
-      alert("Veuillez choisir vos dates");
+      alert("Veuillez sélectionner vos dates");
       return;
     }
 
-    // 🔴 CONTROLE IMPORTANT
     if (!isRangeAvailable(startDate, endDate)) {
       alert("❌ Indisponible pour cette période");
       return;
     }
 
-    // ✅ OK → mail
+    // ✅ SI OK → ouvrir mail
     const subject = encodeURIComponent("Réservation Villa CABOUA");
 
     const body = encodeURIComponent(
@@ -125,6 +126,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
-  });
+  };
 
 });

@@ -7,23 +7,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const billing = document.getElementById("billing");
   const btn = document.getElementById("checkoutButton");
 
-  // ========================
-  // 📅 CALENDRIER FLATPICKR - INLINE MOIS ENTIER
-  // ========================
   const fp = flatpickr("#calendar", {
     locale: "fr",
     mode: "range",
-    inline: true,
+    inline: true,           // ✅ Toujours inline, même sur mobile
     minDate: "today",
     dateFormat: "d/m/Y",
-    disableMobile: true,
     showMonths: 1,
+    disableMobile: true,    // empêche le navigateur d'ouvrir le picker natif
+    onReady: function(selectedDates, dateStr, instance) {
+      // Forcer le style responsive
+      instance.calendarContainer.style.width = "100%";
+      instance.calendarContainer.style.maxWidth = "400px";
+    },
     onChange: function(selectedDates) {
       if (selectedDates.length === 2) {
         startDate = selectedDates[0];
         endDate = selectedDates[1];
 
-        let nights = (endDate - startDate) / (1000*60*60*24);
+        let nights = (endDate - startDate) / (1000 * 60 * 60 * 24);
         let total = nights * 140;
 
         billing.innerHTML = `
@@ -36,76 +38,62 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ========================
-  // 🔴 CHARGER DATES BLOQUEES ICS
-  // ========================
+  // Charger dates bloquées depuis ICS
   fetch("https://api.allorigins.win/raw?url=" +
     encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
   )
   .then(res => res.text())
   .then(text => {
-
     const lines = text.split("\n");
     let start, end;
 
     lines.forEach(line => {
-      if (line.includes("DTSTART")) start = line.split(":")[1].trim();
-      if (line.includes("DTEND")) {
+      if(line.includes("DTSTART")) start = line.split(":")[1].trim();
+      if(line.includes("DTEND")){
         end = line.split(":")[1].trim();
 
         let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
         let e = new Date(end.substring(0,4), end.substring(4,6)-1, end.substring(6,8));
 
-        while (s < e) {
+        while(s < e){
           blockedDates.push(new Date(s.toDateString()));
-          s.setDate(s.getDate()+1);
+          s.setDate(s.getDate() + 1);
         }
       }
     });
 
     fp.set("disable", blockedDates);
-
   })
   .catch(err => console.log("Erreur ICS :", err));
 
-  // ========================
-  // 🔴 VERIF DISPO
-  // ========================
-  function isBlocked(date) {
-    return blockedDates.some(d =>
-      new Date(d).toDateString() === new Date(date).toDateString()
-    );
+  function isBlocked(date){
+    return blockedDates.some(d => new Date(d).toDateString() === new Date(date).toDateString());
   }
 
-  function isRangeAvailable(start, end) {
+  function isRangeAvailable(start, end){
     let current = new Date(start);
-    while (current < end) {
-      if (isBlocked(current)) return false;
+    while(current < end){
+      if(isBlocked(current)) return false;
       current.setDate(current.getDate() + 1);
     }
     return true;
   }
 
-  // ========================
-  // 🔴 BOUTON RESERVER
-  // ========================
-  btn.onclick = function(e) {
+  btn.onclick = function(e){
     e.preventDefault();
 
-    if (!startDate || !endDate) {
+    if(!startDate || !endDate){
       alert("Veuillez sélectionner vos dates");
       return;
     }
 
-    if (!isRangeAvailable(startDate, endDate)) {
+    if(!isRangeAvailable(startDate, endDate)){
       alert("❌ Indisponible pour cette période");
       return;
     }
 
     const subject = encodeURIComponent("Réservation Villa CABOUA");
-    const body = encodeURIComponent(
-      `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.`
-    );
+    const body = encodeURIComponent(`Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.`);
 
     window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
   };

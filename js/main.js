@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
 
   let startDate = null;
   let endDate = null;
@@ -8,60 +8,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const btn = document.getElementById("checkoutButton");
 
   // ========================
-  // 🔴 CHARGER ICS
+  // 📅 CALENDRIER (ouvre direct)
   // ========================
-  async function fetchBlockedDates() {
-    try {
-      const url = "https://api.allorigins.win/raw?url=" +
-      encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics");
-
-      const res = await fetch(url);
-      const text = await res.text();
-
-      const lines = text.split("\n");
-
-      let dates = [];
-      let start, end;
-
-      lines.forEach(line => {
-
-        if (line.includes("DTSTART")) {
-          start = line.split(":")[1].trim();
-        }
-
-        if (line.includes("DTEND")) {
-          end = line.split(":")[1].trim();
-
-          let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
-          let e = new Date(end.substring(0,4), end.substring(4,6)-1, end.substring(6,8));
-
-          while (s < e) {
-            dates.push(new Date(s.toDateString()));
-            s.setDate(s.getDate()+1);
-          }
-        }
-
-      });
-
-      return dates;
-
-    } catch (e) {
-      console.log("Erreur ICS :", e);
-      return [];
-    }
-  }
-
-  blockedDates = await fetchBlockedDates();
-
-  // ========================
-  // 📅 CALENDRIER
-  // ========================
-  flatpickr("#calendar", {
+  const fp = flatpickr("#calendar", {
     locale: "fr",
     mode: "range",
     minDate: "today",
     dateFormat: "d/m/Y",
-    disable: blockedDates,
 
     onChange: function(selectedDates) {
       if (selectedDates.length === 2) {
@@ -79,6 +32,47 @@ document.addEventListener("DOMContentLoaded", async () => {
         `;
       }
     }
+  });
+
+  // ========================
+  // 🔴 CHARGER ICS (APRÈS)
+  // ========================
+  fetch("https://api.allorigins.win/raw?url=" +
+    encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
+  )
+  .then(res => res.text())
+  .then(text => {
+
+    const lines = text.split("\n");
+
+    let start, end;
+
+    lines.forEach(line => {
+
+      if (line.includes("DTSTART")) {
+        start = line.split(":")[1].trim();
+      }
+
+      if (line.includes("DTEND")) {
+        end = line.split(":")[1].trim();
+
+        let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
+        let e = new Date(end.substring(0,4), end.substring(4,6)-1, end.substring(6,8));
+
+        while (s < e) {
+          blockedDates.push(new Date(s.toDateString()));
+          s.setDate(s.getDate()+1);
+        }
+      }
+
+    });
+
+    // 🔥 appliquer blocage APRÈS chargement
+    fp.set("disable", blockedDates);
+
+  })
+  .catch(err => {
+    console.log("Erreur ICS :", err);
   });
 
   // ========================
@@ -102,11 +96,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ========================
-  // 🔥 BOUTON RESERVER (CORRIGÉ)
+  // 🔥 BOUTON RESERVER
   // ========================
-  btn.onclick = function (e) {
+  btn.onclick = function(e) {
 
-    e.preventDefault(); // 🔴 BLOQUE tout envoi automatique
+    e.preventDefault();
 
     if (!startDate || !endDate) {
       alert("Veuillez sélectionner vos dates");
@@ -118,7 +112,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // ✅ SI OK → ouvrir mail
+    // ✅ OK → mail
     const subject = encodeURIComponent("Réservation Villa CABOUA");
 
     const body = encodeURIComponent(

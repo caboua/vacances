@@ -112,6 +112,21 @@ return true;
 }
 
 // =====================
+// WHATSAPP
+// =====================
+document.getElementById("whatsappFloat").onclick = function(){
+
+let msg = "Bonjour, je souhaite des informations pour Villa CABOUA.";
+
+if(startDate && endDate){
+msg = `Bonjour, je souhaite réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")} pour ${adults} adultes et ${children} enfants.`;
+}
+
+window.open("https://wa.me/590690520616?text=" + encodeURIComponent(msg), "_blank");
+
+};
+  
+  // =====================
 // RESERVER
 // =====================
 document.getElementById("checkoutButton").onclick = function(){

@@ -7,85 +7,82 @@ document.addEventListener("DOMContentLoaded", () => {
   const billing = document.getElementById("billing");
   const btn = document.getElementById("checkoutButton");
 
-  // ========================
-  // 📅 INITIALISATION FLATPICKR
-  // ========================
+  // CALENDRIER
   const fp = flatpickr("#calendar", {
     locale: "fr",
-    mode: "range",
     inline: true,
+    mode: "range",
     minDate: "today",
     dateFormat: "d/m/Y",
     disableMobile: true,
-    disable: [],       // vide au départ
-    onChange: function(selectedDates) {
-      if (selectedDates.length === 2) {
-        startDate = selectedDates[0];
-        endDate = selectedDates[1];
-
-        // Calcul nombre de nuits
-        let nights = (endDate - startDate) / (1000*60*60*24);
-        if(nights < 4){
-          billing.innerHTML = `<div class="billing-line">Minimum 4 nuits</div>`;
-          return;
-        }
-
-        // Calcul total
-        const adults = parseInt(document.getElementById("adultCount").textContent);
-        const children = parseInt(document.getElementById("childCount").textContent);
-        const people = adults + children;
-        const total = nights*140 + 1.5*people + 120; // 140€/nuit + 1.5€/personne + 120€ ménage
-
-        billing.innerHTML = `
-          <div class="billing-line"><span>${nights} nuits</span><span>${nights*140} €</span></div>
-          <div class="billing-line"><span>Frais ménage</span><span>120 €</span></div>
-          <div class="billing-line"><span>Taxe/personne</span><span>${(1.5*people).toFixed(2)} €</span></div>
-          <div class="billing-line total"><span>Total</span><span>${total.toFixed(2)} €</span></div>
-        `;
-      }
-    }
+    disable: []
   });
 
-  // ========================
-  // 🔴 CHARGER DATES BLOQUEES ICS EN BACKGROUND
-  // ========================
+  // CHARGEMENT ICS
   fetch("https://api.allorigins.win/raw?url=" +
     encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
   )
   .then(res => res.text())
   .then(text => {
+
     const lines = text.split("\n");
     let start, end;
 
     lines.forEach(line => {
-      if(line.includes("DTSTART")) start = line.split(":")[1].trim();
+      if(line.includes("DTSTART")) start = line.split(":")[1];
       if(line.includes("DTEND")){
-        end = line.split(":")[1].trim();
+        end = line.split(":")[1];
 
         let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
         let e = new Date(end.substring(0,4), end.substring(4,6)-1, end.substring(6,8));
 
         while(s < e){
-          blockedDates.push(new Date(s.toDateString()));
+          blockedDates.push(new Date(s));
           s.setDate(s.getDate()+1);
         }
       }
     });
 
-    // 🔥 update Flatpickr après chargement
     fp.set("disable", blockedDates);
     fp.redraw();
-  })
-  .catch(err => console.log("Erreur ICS :", err));
 
-  // ========================
-  // 🔴 VERIFICATION DISPONIBILITE
-  // ========================
+  });
+
+  // SELECTION DATES
+  fp.config.onChange.push(function(selectedDates){
+
+    if(selectedDates.length === 2){
+      startDate = selectedDates[0];
+      endDate = selectedDates[1];
+
+      let nights = (endDate - startDate)/(1000*60*60*24);
+
+      if(nights < 4){
+        billing.innerHTML = "Minimum 4 nuits";
+        return;
+      }
+
+      const adults = parseInt(document.getElementById("adultCount").textContent);
+      const children = parseInt(document.getElementById("childCount").textContent);
+      const people = adults + children;
+
+      const total = nights*140 + people*1.5 + 120;
+
+      billing.innerHTML = `
+        <p>${nights} nuits</p>
+        <p>Ménage: 120€</p>
+        <p>Taxe: ${(people*1.5).toFixed(2)}€</p>
+        <h3>Total: ${total.toFixed(2)}€</h3>
+      `;
+    }
+  });
+
+  // VERIFICATION
   function isBlocked(date){
-    return blockedDates.some(d => new Date(d).toDateString() === new Date(date).toDateString());
+    return blockedDates.some(d => d.toDateString() === date.toDateString());
   }
 
-  function isRangeAvailable(start, end){
+  function isRangeAvailable(start,end){
     let current = new Date(start);
     while(current <= end){
       if(isBlocked(current)) return false;
@@ -94,19 +91,17 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
-  // ========================
-  // 🔴 CONTROLE BOUTON RESERVER
-  // ========================
+  // RESERVATION
   btn.onclick = function(e){
     e.preventDefault();
 
     if(!startDate || !endDate){
-      alert("Veuillez sélectionner vos dates");
+      alert("Choisir dates");
       return;
     }
 
     if(!isRangeAvailable(startDate,endDate)){
-      alert("❌ Indisponible pour cette période");
+      alert("Indisponible");
       return;
     }
 
@@ -115,39 +110,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const people = adults + children;
 
     const nights = (endDate - startDate)/(1000*60*60*24);
-    const total = nights*140 + 1.5*people + 120;
+    const total = nights*140 + people*1.5 + 120;
 
-    const subject = encodeURIComponent("Réservation Villa CABOUA");
     const body = encodeURIComponent(
-      `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")} pour ${people} personnes.\nTotal: ${total.toFixed(2)} €`
+      `Bonjour,\nRéservation du ${startDate.toLocaleDateString()} au ${endDate.toLocaleDateString()}\nPersonnes: ${people}\nTotal: ${total.toFixed(2)}€`
     );
 
-    window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:villa.caboua@gmail.com?subject=Reservation&body=${body}`;
   };
 
-  // ========================
-  // 🔴 CONTROLE ADULTES / ENFANTS
-  // ========================
-  const adultMinus = document.getElementById("adultMinus");
-  const adultPlus = document.getElementById("adultPlus");
-  const childMinus = document.getElementById("childMinus");
-  const childPlus = document.getElementById("childPlus");
+  // COMPTEURS
+  document.getElementById("adultPlus").onclick = () => {
+    let el = document.getElementById("adultCount");
+    el.textContent = Math.min(6, parseInt(el.textContent)+1);
+  };
 
-  adultMinus.onclick = ()=>{ 
-    let v = parseInt(document.getElementById("adultCount").textContent);
-    if(v>1) document.getElementById("adultCount").textContent = v-1;
+  document.getElementById("adultMinus").onclick = () => {
+    let el = document.getElementById("adultCount");
+    el.textContent = Math.max(1, parseInt(el.textContent)-1);
   };
-  adultPlus.onclick = ()=>{ 
-    let v = parseInt(document.getElementById("adultCount").textContent);
-    if(v<6) document.getElementById("adultCount").textContent = v+1;
+
+  document.getElementById("childPlus").onclick = () => {
+    let el = document.getElementById("childCount");
+    el.textContent = Math.min(2, parseInt(el.textContent)+1);
   };
-  childMinus.onclick = ()=>{ 
-    let v = parseInt(document.getElementById("childCount").textContent);
-    if(v>0) document.getElementById("childCount").textContent = v-1;
-  };
-  childPlus.onclick = ()=>{ 
-    let v = parseInt(document.getElementById("childCount").textContent);
-    if(v<2) document.getElementById("childCount").textContent = v+1;
+
+  document.getElementById("childMinus").onclick = () => {
+    let el = document.getElementById("childCount");
+    el.textContent = Math.max(0, parseInt(el.textContent)-1);
   };
 
 });

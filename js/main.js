@@ -7,25 +7,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const billing = document.getElementById("billing");
   const btn = document.getElementById("checkoutButton");
 
-  // CALENDRIER
   const fp = flatpickr("#calendar", {
     locale: "fr",
     inline: true,
     mode: "range",
+    showMonths: 2,
     minDate: "today",
-    dateFormat: "d/m/Y",
     disableMobile: true,
     disable: []
   });
 
-  // CHARGEMENT ICS
+  // LOAD ICS
   fetch("https://api.allorigins.win/raw?url=" +
     encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
   )
-  .then(res => res.text())
+  .then(r => r.text())
   .then(text => {
 
-    const lines = text.split("\n");
+    let lines = text.split("\n");
     let start, end;
 
     lines.forEach(line => {
@@ -45,13 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fp.set("disable", blockedDates);
     fp.redraw();
-
   });
 
-  // SELECTION DATES
+  // SELECTION
   fp.config.onChange.push(function(selectedDates){
 
     if(selectedDates.length === 2){
+
       startDate = selectedDates[0];
       endDate = selectedDates[1];
 
@@ -72,54 +71,28 @@ document.addEventListener("DOMContentLoaded", () => {
         <p>${nights} nuits</p>
         <p>Ménage: 120€</p>
         <p>Taxe: ${(people*1.5).toFixed(2)}€</p>
-        <h3>Total: ${total.toFixed(2)}€</h3>
+        <h2>Total: ${total.toFixed(2)}€</h2>
       `;
     }
   });
-
-  // VERIFICATION
-  function isBlocked(date){
-    return blockedDates.some(d => d.toDateString() === date.toDateString());
-  }
-
-  function isRangeAvailable(start,end){
-    let current = new Date(start);
-    while(current <= end){
-      if(isBlocked(current)) return false;
-      current.setDate(current.getDate()+1);
-    }
-    return true;
-  }
 
   // RESERVATION
   btn.onclick = function(e){
     e.preventDefault();
 
     if(!startDate || !endDate){
-      alert("Choisir dates");
+      alert("Sélectionner des dates");
       return;
     }
-
-    if(!isRangeAvailable(startDate,endDate)){
-      alert("Indisponible");
-      return;
-    }
-
-    const adults = parseInt(document.getElementById("adultCount").textContent);
-    const children = parseInt(document.getElementById("childCount").textContent);
-    const people = adults + children;
-
-    const nights = (endDate - startDate)/(1000*60*60*24);
-    const total = nights*140 + people*1.5 + 120;
 
     const body = encodeURIComponent(
-      `Bonjour,\nRéservation du ${startDate.toLocaleDateString()} au ${endDate.toLocaleDateString()}\nPersonnes: ${people}\nTotal: ${total.toFixed(2)}€`
+      `Réservation du ${startDate.toLocaleDateString()} au ${endDate.toLocaleDateString()}`
     );
 
     window.location.href = `mailto:villa.caboua@gmail.com?subject=Reservation&body=${body}`;
   };
 
-  // COMPTEURS
+  // COUNTERS
   document.getElementById("adultPlus").onclick = () => {
     let el = document.getElementById("adultCount");
     el.textContent = Math.min(6, parseInt(el.textContent)+1);

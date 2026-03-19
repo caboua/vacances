@@ -1,197 +1,153 @@
-document.getElementById("calendarLoader").style.display = "none";
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
 
   let startDate = null;
   let endDate = null;
   let blockedDates = [];
 
-  let adults = 2;
-  let children = 0;
-
   const billing = document.getElementById("billing");
+  const btn = document.getElementById("checkoutButton");
 
-  const NIGHT_PRICE = 140;
-  const CLEANING = 120;
-  const TAX = 1.5;
-  const MIN_NIGHTS = 4;
-
-  // ============================
-  // 🔴 FORMAT DATE YYYY-MM-DD
-  // ============================
-  function formatDate(d){
-    let m = '' + (d.getMonth()+1);
-    let day = '' + d.getDate();
-    let y = d.getFullYear();
-
-    if(m.length < 2) m = '0' + m;
-    if(day.length < 2) day = '0' + day;
-
-    return `${y}-${m}-${day}`;
-  }
-
-  // ============================
-  // 🔴 CHARGER ICS
-  // ============================
-  async function loadBlockedDates(){
-
-    try {
-      const res = await fetch("https://api.allorigins.win/raw?url=" +
-        encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
-      );
-
-      const text = await res.text();
-
-      const lines = text.split("\n");
-      let start, end;
-
-      lines.forEach(line => {
-        if(line.includes("DTSTART")) start = line.split(":")[1];
-        if(line.includes("DTEND")){
-          end = line.split(":")[1];
-
-          let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
-          let e = new Date(end.substring(0,4), end.substring(4,6)-1, end.substring(6,8));
-
-          while(s < e){
-            blockedDates.push(formatDate(s)); // 🔥 FIX ICI
-            s.setDate(s.getDate()+1);
-          }
-        }
-      });
-
-      console.log("Dates bloquées :", blockedDates);
-
-    } catch(err){
-      console.log("Erreur ICS :", err);
-    }
-  }
-
-  await loadBlockedDates();
-
-  // ============================
-  // 📅 CALENDRIER
-  // ============================
+  // ========================
+  // 📅 INITIALISATION FLATPICKR
+  // ========================
   const fp = flatpickr("#calendar", {
     locale: "fr",
-    inline: true,
     mode: "range",
+    inline: true,
     minDate: "today",
     dateFormat: "d/m/Y",
     disableMobile: true,
-    disable: blockedDates,
-
-    onChange: function(selectedDates){
-      if(selectedDates.length === 2){
+    disable: [],       // vide au départ
+    onChange: function(selectedDates) {
+      if (selectedDates.length === 2) {
         startDate = selectedDates[0];
         endDate = selectedDates[1];
-        updatePrice();
+
+        // Calcul nombre de nuits
+        let nights = (endDate - startDate) / (1000*60*60*24);
+        if(nights < 4){
+          billing.innerHTML = `<div class="billing-line">Minimum 4 nuits</div>`;
+          return;
+        }
+
+        // Calcul total
+        const adults = parseInt(document.getElementById("adultCount").textContent);
+        const children = parseInt(document.getElementById("childCount").textContent);
+        const people = adults + children;
+        const total = nights*140 + 1.5*people + 120; // 140€/nuit + 1.5€/personne + 120€ ménage
+
+        billing.innerHTML = `
+          <div class="billing-line"><span>${nights} nuits</span><span>${nights*140} €</span></div>
+          <div class="billing-line"><span>Frais ménage</span><span>120 €</span></div>
+          <div class="billing-line"><span>Taxe/personne</span><span>${(1.5*people).toFixed(2)} €</span></div>
+          <div class="billing-line total"><span>Total</span><span>${total.toFixed(2)} €</span></div>
+        `;
       }
     }
   });
 
-  // ============================
-  // 💰 PRIX
-  // ============================
-  function updatePrice(){
+  // ========================
+  // 🔴 CHARGER DATES BLOQUEES ICS EN BACKGROUND
+  // ========================
+  fetch("https://api.allorigins.win/raw?url=" +
+    encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
+  )
+  .then(res => res.text())
+  .then(text => {
+    const lines = text.split("\n");
+    let start, end;
 
-    if(!startDate || !endDate) return;
+    lines.forEach(line => {
+      if(line.includes("DTSTART")) start = line.split(":")[1].trim();
+      if(line.includes("DTEND")){
+        end = line.split(":")[1].trim();
 
-    let nights = (endDate - startDate)/(1000*60*60*24);
+        let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
+        let e = new Date(end.substring(0,4), end.substring(4,6)-1, end.substring(6,8));
 
-    if(nights < MIN_NIGHTS){
-      billing.innerHTML = `<p style="color:red;">Minimum ${MIN_NIGHTS} nuits</p>`;
-      return;
-    }
+        while(s < e){
+          blockedDates.push(new Date(s.toDateString()));
+          s.setDate(s.getDate()+1);
+        }
+      }
+    });
 
-    let totalNights = nights * NIGHT_PRICE;
-    let tax = (adults + children) * TAX;
-    let total = totalNights + tax + CLEANING;
+    // 🔥 update Flatpickr après chargement
+    fp.set("disable", blockedDates);
+    fp.redraw();
+  })
+  .catch(err => console.log("Erreur ICS :", err));
 
-    billing.innerHTML = `
-      <div class="billing-line"><span>${nights} nuits</span><span>${totalNights} €</span></div>
-      <div class="billing-line"><span>Taxe séjour</span><span>${tax.toFixed(2)} €</span></div>
-      <div class="billing-line"><span>Ménage</span><span>${CLEANING} €</span></div>
-      <div class="billing-line total"><span>Total</span><span>${total.toFixed(2)} €</span></div>
-    `;
-  }
-
-  // ============================
-  // 👨‍👩‍👧 COMPTEURS
-  // ============================
-  document.getElementById("adultPlus").onclick = () => {
-    if(adults < 6){
-      adults++;
-      document.getElementById("adultCount").innerText = adults;
-      updatePrice();
-    }
-  };
-
-  document.getElementById("adultMinus").onclick = () => {
-    if(adults > 1){
-      adults--;
-      document.getElementById("adultCount").innerText = adults;
-      updatePrice();
-    }
-  };
-
-  document.getElementById("childPlus").onclick = () => {
-    if(adults + children < 8){
-      children++;
-      document.getElementById("childCount").innerText = children;
-      updatePrice();
-    }
-  };
-
-  document.getElementById("childMinus").onclick = () => {
-    if(children > 0){
-      children--;
-      document.getElementById("childCount").innerText = children;
-      updatePrice();
-    }
-  };
-
-  // ============================
-  // 🔴 VERIF DISPO
-  // ============================
+  // ========================
+  // 🔴 VERIFICATION DISPONIBILITE
+  // ========================
   function isBlocked(date){
-    return blockedDates.includes(formatDate(date));
+    return blockedDates.some(d => new Date(d).toDateString() === new Date(date).toDateString());
   }
 
-  function isAvailable(start,end){
-    let d = new Date(start);
-    while(d < end){
-      if(isBlocked(d)) return false;
-      d.setDate(d.getDate()+1);
+  function isRangeAvailable(start, end){
+    let current = new Date(start);
+    while(current <= end){
+      if(isBlocked(current)) return false;
+      current.setDate(current.getDate()+1);
     }
     return true;
   }
 
-  // ============================
-  // 📩 RESERVER
-  // ============================
-  document.getElementById("checkoutButton").onclick = function(){
+  // ========================
+  // 🔴 CONTROLE BOUTON RESERVER
+  // ========================
+  btn.onclick = function(e){
+    e.preventDefault();
 
     if(!startDate || !endDate){
-      alert("Choisissez vos dates");
+      alert("Veuillez sélectionner vos dates");
       return;
     }
 
-    let nights = (endDate - startDate)/(1000*60*60*24);
-
-    if(nights < MIN_NIGHTS){
-      alert(`Minimum ${MIN_NIGHTS} nuits`);
-      return;
-    }
-
-    if(!isAvailable(startDate,endDate)){
+    if(!isRangeAvailable(startDate,endDate)){
       alert("❌ Indisponible pour cette période");
       return;
     }
 
-    let total = (nights * NIGHT_PRICE) + ((adults+children)*TAX) + CLEANING;
+    const adults = parseInt(document.getElementById("adultCount").textContent);
+    const children = parseInt(document.getElementById("childCount").textContent);
+    const people = adults + children;
 
-    window.location.href =
-      `mailto:villa.caboua@gmail.com?subject=Réservation&body=Bonjour,%0D%0A%0D%0ANous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}%0D%0AAdultes: ${adults}%0D%0AEnfants: ${children}%0D%0ATotal: ${total.toFixed(2)} €`;
+    const nights = (endDate - startDate)/(1000*60*60*24);
+    const total = nights*140 + 1.5*people + 120;
+
+    const subject = encodeURIComponent("Réservation Villa CABOUA");
+    const body = encodeURIComponent(
+      `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")} pour ${people} personnes.\nTotal: ${total.toFixed(2)} €`
+    );
+
+    window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
+  };
+
+  // ========================
+  // 🔴 CONTROLE ADULTES / ENFANTS
+  // ========================
+  const adultMinus = document.getElementById("adultMinus");
+  const adultPlus = document.getElementById("adultPlus");
+  const childMinus = document.getElementById("childMinus");
+  const childPlus = document.getElementById("childPlus");
+
+  adultMinus.onclick = ()=>{ 
+    let v = parseInt(document.getElementById("adultCount").textContent);
+    if(v>1) document.getElementById("adultCount").textContent = v-1;
+  };
+  adultPlus.onclick = ()=>{ 
+    let v = parseInt(document.getElementById("adultCount").textContent);
+    if(v<6) document.getElementById("adultCount").textContent = v+1;
+  };
+  childMinus.onclick = ()=>{ 
+    let v = parseInt(document.getElementById("childCount").textContent);
+    if(v>0) document.getElementById("childCount").textContent = v-1;
+  };
+  childPlus.onclick = ()=>{ 
+    let v = parseInt(document.getElementById("childCount").textContent);
+    if(v<2) document.getElementById("childCount").textContent = v+1;
   };
 
 });

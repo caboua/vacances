@@ -1,175 +1,142 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  let startDate = null;
-  let endDate = null;
-  let blockedDates = [];
-  let adults = 2;
-  let children = 0;
+let startDate = null;
+let endDate = null;
+let blockedDates = [];
 
-  const billing = document.getElementById("billing");
-  const btn = document.getElementById("checkoutButton");
-  const adultMinus = document.getElementById("adultMinus");
-  const adultPlus = document.getElementById("adultPlus");
-  const childMinus = document.getElementById("childMinus");
-  const childPlus = document.getElementById("childPlus");
-  const adultCount = document.getElementById("adultCount");
-  const childCount = document.getElementById("childCount");
+let adults = 2;
+let children = 0;
 
-  const NIGHT_PRICE = 140;
-  const CLEANING_FEE = 120;
-  const TAX_PER_PERSON = 1.5;
-  const MIN_NIGHTS = 4;
+const billing = document.getElementById("billing");
 
-  // ========================
-  // 📅 CALENDRIER FLATPICKR
-  // ========================
-  const fp = flatpickr("#calendar", {
-    locale: "fr",
-    mode: "range",
-    inline: true,
-    minDate: "today",
-    dateFormat: "d/m/Y",
-    showMonths: 1,
-    disableMobile: true,
-    onChange: function(selectedDates) {
-      if (selectedDates.length === 2) {
-        startDate = selectedDates[0];
-        endDate = selectedDates[1];
-        updateBilling();
-      }
+// =====================
+// CALENDRIER
+// =====================
+const fp = flatpickr("#calendar", {
+  locale: "fr",
+  inline: true,
+  mode: "range",
+  minDate: "today",
+  disableMobile: true,
+
+  onChange: function(selectedDates){
+    if(selectedDates.length === 2){
+      startDate = selectedDates[0];
+      endDate = selectedDates[1];
+      updatePrice();
     }
-  });
-
-  // ========================
-  // 🔴 CHARGER DATES BLOQUEES ICS
-  // ========================
-  fetch("https://api.allorigins.win/raw?url=" +
-    encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
-  )
-  .then(res => res.text())
-  .then(text => {
-
-    const lines = text.split("\n");
-    let start, end;
-
-    lines.forEach(line => {
-      if (line.includes("DTSTART")) start = line.split(":")[1].trim();
-      if (line.includes("DTEND")) {
-        end = line.split(":")[1].trim();
-
-        let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
-        let e = new Date(end.substring(0,4), end.substring(4,6)-1, end.substring(6,8));
-
-        while (s < e) {
-          blockedDates.push(new Date(s.toDateString()));
-          s.setDate(s.getDate()+1);
-        }
-      }
-    });
-
-    fp.set("disable", blockedDates);
-
-  })
-  .catch(err => console.log("Erreur ICS :", err));
-
-  // ========================
-  // 🔴 CALCUL ET AFFICHAGE PRIX
-  // ========================
-  function updateBilling() {
-    if(!startDate || !endDate) return;
-
-    const nights = Math.round((endDate - startDate)/(1000*60*60*24));
-    if(nights < MIN_NIGHTS){
-      billing.innerHTML = `<p style="color:red;">Séjour minimum ${MIN_NIGHTS} nuits</p>`;
-      return;
-    }
-
-    const subtotal = nights * NIGHT_PRICE;
-    const tax = (adults + children) * TAX_PER_PERSON;
-    const total = subtotal + CLEANING_FEE + tax;
-
-    billing.innerHTML = `
-      <div class="billing-line">
-        <span>${nights} nuits</span>
-        <span>${subtotal} €</span>
-      </div>
-      <div class="billing-line">
-        <span>Adultes: ${adults}</span>
-        <span>Enfants: ${children}</span>
-      </div>
-      <div class="billing-line">
-        <span>Frais ménage</span>
-        <span>${CLEANING_FEE} €</span>
-      </div>
-      <div class="billing-line">
-        <span>Taxe</span>
-        <span>${tax.toFixed(2)} €</span>
-      </div>
-      <div class="billing-line total">
-        <span>Total final</span>
-        <span>${total.toFixed(2)} €</span>
-      </div>
-    `;
   }
+});
 
-  // ========================
-  // 🔴 GESTION COUNTERS
-  // ========================
-  adultPlus.onclick = () => { if(adults<6){ adults++; adultCount.textContent = adults; updateBilling(); }};
-  adultMinus.onclick = () => { if(adults>1){ adults--; adultCount.textContent = adults; updateBilling(); }};
-  childPlus.onclick = () => { if(adults+children<8){ children++; childCount.textContent = children; updateBilling(); }};
-  childMinus.onclick = () => { if(children>0){ children--; childCount.textContent = children; updateBilling(); }};
+// =====================
+// CHARGER ICS
+// =====================
+fetch("https://api.allorigins.win/raw?url=" +
+encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics"))
+.then(res=>res.text())
+.then(text=>{
 
-  // ========================
-  // 🔴 VERIFICATION DISPO
-  // ========================
-  function isBlocked(date) {
-    return blockedDates.some(d =>
-      new Date(d).toDateString() === new Date(date).toDateString()
-    );
-  }
+let lines = text.split("\n");
+let start, end;
 
-  function isRangeAvailable(start, end) {
-    let current = new Date(start);
-    while (current < end) {
-      if (isBlocked(current)) return false;
-      current.setDate(current.getDate()+1);
-    }
-    return true;
-  }
+lines.forEach(line=>{
+if(line.includes("DTSTART")) start = line.split(":")[1];
+if(line.includes("DTEND")){
+end = line.split(":")[1];
 
-  // ========================
-  // 🔴 BOUTON RESERVER
-  // ========================
-  btn.onclick = function(e) {
-    e.preventDefault();
+let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
+let e = new Date(end.substring(0,4), end.substring(4,6)-1, end.substring(6,8));
 
-    if(!startDate || !endDate){
-      alert("Veuillez sélectionner vos dates");
-      return;
-    }
+while(s < e){
+blockedDates.push(new Date(s));
+s.setDate(s.getDate()+1);
+}
+}
+});
 
-    const nights = Math.round((endDate - startDate)/(1000*60*60*24));
-    if(nights < MIN_NIGHTS){
-      alert(`Séjour minimum ${MIN_NIGHTS} nuits`);
-      return;
-    }
+fp.set("disable", blockedDates);
+fp.redraw();
 
-    if(!isRangeAvailable(startDate, endDate)){
-      alert("❌ Indisponible pour cette période");
-      return;
-    }
+});
 
-    const subtotal = nights * NIGHT_PRICE;
-    const tax = (adults + children) * TAX_PER_PERSON;
-    const total = subtotal + CLEANING_FEE + tax;
+// =====================
+// PRIX
+// =====================
+function updatePrice(){
 
-    const subject = encodeURIComponent("Réservation Villa CABOUA");
-    const body = encodeURIComponent(
-      `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.\nAdultes: ${adults}\nEnfants: ${children}\nFrais ménage: ${CLEANING_FEE} €\nTaxe: ${tax.toFixed(2)} €\nTotal: ${total.toFixed(2)} €`
-    );
+if(!startDate || !endDate) return;
 
-    window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
-  };
+let nights = (endDate - startDate)/(1000*60*60*24);
+
+if(nights < 4){
+billing.innerHTML = "Minimum 4 nuits";
+return;
+}
+
+let totalNights = nights * 140;
+let tax = (adults+children)*1.5;
+let total = totalNights + tax + 120;
+
+billing.innerHTML = `
+<div class="billing-line"><span>${nights} nuits</span><span>${totalNights}€</span></div>
+<div class="billing-line"><span>Taxe</span><span>${tax.toFixed(2)}€</span></div>
+<div class="billing-line"><span>Ménage</span><span>120€</span></div>
+<div class="billing-line total"><span>Total</span><span>${total.toFixed(2)}€</span></div>
+`;
+
+}
+
+// =====================
+// COMPTEURS
+// =====================
+document.getElementById("adultPlus").onclick=()=>{adults++;updatePrice();document.getElementById("adultCount").innerText=adults;}
+document.getElementById("adultMinus").onclick=()=>{if(adults>1){adults--;updatePrice();document.getElementById("adultCount").innerText=adults;}}
+
+document.getElementById("childPlus").onclick=()=>{children++;updatePrice();document.getElementById("childCount").innerText=children;}
+document.getElementById("childMinus").onclick=()=>{if(children>0){children--;updatePrice();document.getElementById("childCount").innerText=children;}}
+
+// =====================
+// VERIF DISPO
+// =====================
+function isBlocked(date){
+return blockedDates.some(d=>d.toDateString()===date.toDateString());
+}
+
+function isAvailable(start,end){
+let d=new Date(start);
+while(d<end){
+if(isBlocked(d)) return false;
+d.setDate(d.getDate()+1);
+}
+return true;
+}
+
+// =====================
+// RESERVER
+// =====================
+document.getElementById("checkoutButton").onclick = function(){
+
+if(!startDate || !endDate){
+alert("Choisissez vos dates");
+return;
+}
+
+let nights = (endDate - startDate)/(1000*60*60*24);
+
+if(nights < 4){
+alert("Minimum 4 nuits");
+return;
+}
+
+if(!isAvailable(startDate,endDate)){
+alert("Indisponible");
+return;
+}
+
+let total = (nights*140)+((adults+children)*1.5)+120;
+
+window.location.href = `mailto:villa.caboua@gmail.com?subject=Reservation&body=Bonjour, je souhaite réserver du ${startDate.toLocaleDateString()} au ${endDate.toLocaleDateString()} pour ${adults} adultes et ${children} enfants. Total: ${total}€`;
+
+};
 
 });

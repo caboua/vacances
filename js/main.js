@@ -1,3 +1,4 @@
+document.getElementById("calendarLoader").style.display = "none";
 document.addEventListener("DOMContentLoaded", async () => {
 
   let startDate = null;

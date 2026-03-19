@@ -15,9 +15,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   const MIN_NIGHTS = 4;
 
   // ============================
-  // 🔴 CHARGER ICS AVANT TOUT
+  // 🔴 FORMAT DATE YYYY-MM-DD
   // ============================
-  async function loadBlockedDates() {
+  function formatDate(d){
+    let m = '' + (d.getMonth()+1);
+    let day = '' + d.getDate();
+    let y = d.getFullYear();
+
+    if(m.length < 2) m = '0' + m;
+    if(day.length < 2) day = '0' + day;
+
+    return `${y}-${m}-${day}`;
+  }
+
+  // ============================
+  // 🔴 CHARGER ICS
+  // ============================
+  async function loadBlockedDates(){
 
     try {
       const res = await fetch("https://api.allorigins.win/raw?url=" +
@@ -30,31 +44,31 @@ document.addEventListener("DOMContentLoaded", async () => {
       let start, end;
 
       lines.forEach(line => {
-        if (line.includes("DTSTART")) start = line.split(":")[1];
-        if (line.includes("DTEND")) {
+        if(line.includes("DTSTART")) start = line.split(":")[1];
+        if(line.includes("DTEND")){
           end = line.split(":")[1];
 
           let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
           let e = new Date(end.substring(0,4), end.substring(4,6)-1, end.substring(6,8));
 
-          while (s < e) {
-            blockedDates.push(new Date(s));
+          while(s < e){
+            blockedDates.push(formatDate(s)); // 🔥 FIX ICI
             s.setDate(s.getDate()+1);
           }
         }
       });
 
-      console.log("Dates chargées :", blockedDates.length);
+      console.log("Dates bloquées :", blockedDates);
 
-    } catch (err) {
+    } catch(err){
       console.log("Erreur ICS :", err);
     }
   }
 
-  await loadBlockedDates(); // 🔥 IMPORTANT
+  await loadBlockedDates();
 
   // ============================
-  // 📅 INITIALISATION CALENDRIER
+  // 📅 CALENDRIER
   // ============================
   const fp = flatpickr("#calendar", {
     locale: "fr",
@@ -94,7 +108,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     billing.innerHTML = `
       <div class="billing-line"><span>${nights} nuits</span><span>${totalNights} €</span></div>
-      <div class="billing-line"><span>Taxe</span><span>${tax.toFixed(2)} €</span></div>
+      <div class="billing-line"><span>Taxe séjour</span><span>${tax.toFixed(2)} €</span></div>
       <div class="billing-line"><span>Ménage</span><span>${CLEANING} €</span></div>
       <div class="billing-line total"><span>Total</span><span>${total.toFixed(2)} €</span></div>
     `;
@@ -104,26 +118,42 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 👨‍👩‍👧 COMPTEURS
   // ============================
   document.getElementById("adultPlus").onclick = () => {
-    if(adults < 6){ adults++; document.getElementById("adultCount").innerText = adults; updatePrice(); }
+    if(adults < 6){
+      adults++;
+      document.getElementById("adultCount").innerText = adults;
+      updatePrice();
+    }
   };
 
   document.getElementById("adultMinus").onclick = () => {
-    if(adults > 1){ adults--; document.getElementById("adultCount").innerText = adults; updatePrice(); }
+    if(adults > 1){
+      adults--;
+      document.getElementById("adultCount").innerText = adults;
+      updatePrice();
+    }
   };
 
   document.getElementById("childPlus").onclick = () => {
-    if(adults + children < 8){ children++; document.getElementById("childCount").innerText = children; updatePrice(); }
+    if(adults + children < 8){
+      children++;
+      document.getElementById("childCount").innerText = children;
+      updatePrice();
+    }
   };
 
   document.getElementById("childMinus").onclick = () => {
-    if(children > 0){ children--; document.getElementById("childCount").innerText = children; updatePrice(); }
+    if(children > 0){
+      children--;
+      document.getElementById("childCount").innerText = children;
+      updatePrice();
+    }
   };
 
   // ============================
   // 🔴 VERIF DISPO
   // ============================
   function isBlocked(date){
-    return blockedDates.some(d => d.toDateString() === date.toDateString());
+    return blockedDates.includes(formatDate(date));
   }
 
   function isAvailable(start,end){
@@ -160,21 +190,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let total = (nights * NIGHT_PRICE) + ((adults+children)*TAX) + CLEANING;
 
     window.location.href =
-      `mailto:villa.caboua@gmail.com?subject=Réservation&body=Bonjour,%0D%0A%0D%0AJe souhaite réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}%0D%0AAdultes: ${adults}%0D%0AEnfants: ${children}%0D%0ATotal: ${total.toFixed(2)} €`;
-  };
-
-  // ============================
-  // 💬 WHATSAPP
-  // ============================
-  document.getElementById("whatsappFloat").onclick = function(){
-
-    let msg = "Bonjour, je souhaite des informations.";
-
-    if(startDate && endDate){
-      msg = `Bonjour, réservation du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")} (${adults} adultes, ${children} enfants)`;
-    }
-
-    window.open("https://wa.me/590690520616?text=" + encodeURIComponent(msg));
+      `mailto:villa.caboua@gmail.com?subject=Réservation&body=Bonjour,%0D%0A%0D%0ANous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}%0D%0AAdultes: ${adults}%0D%0AEnfants: ${children}%0D%0ATotal: ${total.toFixed(2)} €`;
   };
 
 });

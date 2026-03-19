@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Villa CABOUA – Location en Guadeloupe</title>
+<title>Villa CABOUA</title>
 
 <link rel="stylesheet" href="css/style.css">
 
@@ -15,83 +15,80 @@
 
 <body>
 
-<header>
-  <div class="hero-content">
+<header class="hero">
+  <div class="hero-overlay">
     <h1>Villa CABOUA</h1>
-    <p>Location villa en Guadeloupe – Jusqu'à 8 voyageurs</p>
-    <a href="#disponibilites" class="hero-btn">Vérifier les disponibilités</a>
+    <p>Location en Guadeloupe</p>
   </div>
 </header>
 
 <div class="container">
-  <div class="left">
 
-    <!-- DESCRIPTION -->
-    <div class="section">
-      <h2>Description</h2>
-      <p>Villa moderne située en Guadeloupe, idéale pour un séjour en famille.</p>
+  <!-- GALERIE -->
+  <section class="card">
+    <h2>Galerie</h2>
+    <div class="gallery">
+      <img src="images/salon.jpeg">
+      <img src="images/cuisine.jpeg">
+      <img src="images/chambre1.jpeg">
+      <img src="images/chambre2.jpeg">
+      <img src="images/terrasse.jpeg">
+      <img src="images/sb1.jpeg">
     </div>
+  </section>
 
-    <!-- GALERIE -->
-    <div class="section">
-      <h2>Galerie</h2>
-      <div class="gallery">
-        <img src="images/salon.jpeg">
-        <img src="images/cuisine.jpeg">
-        <img src="images/chambre1.jpeg">
-        <img src="images/chambre2.jpeg">
-        <img src="images/chambreparentale.jpeg">
-        <img src="images/terrasse.jpeg">
-      </div>
+  <!-- EQUIPEMENTS -->
+  <section class="card">
+    <h2>Équipements</h2>
+    <div class="equipments">
+      <div><i class="fa fa-wifi"></i> Wifi</div>
+      <div><i class="fa fa-snowflake"></i> Climatisation</div>
+      <div><i class="fa fa-car"></i> Parking</div>
+      <div><i class="fa fa-tv"></i> TV</div>
     </div>
+  </section>
 
-    <!-- EQUIPEMENTS -->
-    <div class="section">
-      <h2>Équipements</h2>
-      <div class="equip-grid">
-        <div><i class="fa fa-wifi"></i> Wifi</div>
-        <div><i class="fa fa-snowflake"></i> Climatisation</div>
-        <div><i class="fa fa-car"></i> Parking</div>
-        <div><i class="fa fa-tv"></i> TV</div>
-      </div>
-    </div>
+  <!-- DISPONIBILITES -->
+  <section class="card" id="disponibilites">
+    <h2>Disponibilités</h2>
 
-    <!-- DISPONIBILITES -->
-    <div class="section" id="disponibilites">
-      <h2>Disponibilités</h2>
+    <iframe
+      class="calendar-iframe"
+      src="https://calendar.google.com/calendar/embed?src=ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com&ctz=America%2FGuadeloupe">
+    </iframe>
 
-      <iframe
-        src="https://calendar.google.com/calendar/embed?src=ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com&ctz=America%2FGuadeloupe"
-        style="border:0"
-        width="100%"
-        height="400"
-      ></iframe>
+    <div id="calendar"></div>
 
-      <br><br>
+    <div class="booking">
 
-      <input id="calendar" placeholder="Choisir dates">
+      <div class="row">
+        <div>
+          <label>Adultes</label>
+          <div class="counter">
+            <button id="adultMinus">-</button>
+            <span id="adultCount">2</span>
+            <button id="adultPlus">+</button>
+          </div>
+        </div>
 
-      <div id="billing"></div>
-
-      <div class="counter">
-        <button id="adultMinus">-</button>
-        <span id="adultCount">2</span>
-        <button id="adultPlus">+</button>
-      </div>
-
-      <div class="counter">
-        <button id="childMinus">-</button>
-        <span id="childCount">0</span>
-        <button id="childPlus">+</button>
+        <div>
+          <label>Enfants</label>
+          <div class="counter">
+            <button id="childMinus">-</button>
+            <span id="childCount">0</span>
+            <button id="childPlus">+</button>
+          </div>
+        </div>
       </div>
 
-      <p>Max 8 personnes</p>
+      <div id="billing" class="billing"></div>
 
-      <button id="checkoutButton">Réserver</button>
+      <button id="checkoutButton" class="btn">Réserver</button>
 
     </div>
 
-  </div>
+  </section>
+
 </div>
 
 <!-- WHATSAPP -->

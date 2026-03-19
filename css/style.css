@@ -1,243 +1,64 @@
-/* === GLOBAL === */
 body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #f6f6f6;
-    color: #222;
+  font-family: Arial;
+  margin: 0;
 }
 
-a { text-decoration: none; }
-
-/* === HEADER HERO === */
 header {
-    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('../images/fond.jpg') center/cover no-repeat;
-    color: white;
-    text-align: center;
-    padding: 140px 20px;
+  height: 300px;
+  background: url("../images/header.jpg") center/cover;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-header h1 {
-    font-size: 3rem;
-    letter-spacing: 2px;
-    margin: 0;
-}
-
-header p {
-    color: #f1c40f;
-    margin-top: 15px;
-    font-size: 18px;
-}
-
-.hero-btn {
-    display: inline-block;
-    margin-top: 30px;
-    padding: 15px 30px;
-    background: #e67e22;
-    color: white;
-    font-weight: bold;
-    border-radius: 8px;
-}
-
-.hero-btn:hover {
-    background: #cf711f;
-}
-
-/* === CONTAINER === */
 .container {
-    max-width: 1200px;
-    margin: 50px auto;
-    display: flex;
-    gap: 40px;
-    padding: 0 20px;
+  padding: 20px;
 }
 
-.left { flex: 2; }
-
-/* === SECTIONS === */
-.section {
-    background: white;
-    padding: 30px;
-    margin-bottom: 35px;
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
-}
-
-/* === GALERIE === */
 .gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* ✅ 3 images sur PC */
-    gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .gallery img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 12px;
+  width: 100%;
+  border-radius: 10px;
 }
 
-/* === ÉQUIPEMENTS === */
 .equip-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-top: 15px;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 10px;
 }
 
-.equip-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.equip-item i {
-    color: #27ae60;
-}
-
-/* === COUNTERS === */
 .counter {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0;
 }
 
 .counter button {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-    background: white;
-    font-size: 18px;
-    cursor: pointer;
+  padding: 5px 10px;
 }
 
-/* === BOUTON RESERVER === */
 #checkoutButton {
-    width: 100%;
-    padding: 14px;
-    background: #e67e22;
-    border: none;
-    border-radius: 10px;
-    color: white;
-    font-weight: bold;
-    margin-top: 15px;
-    font-size: 16px;
-    cursor: pointer;
+  padding: 12px;
+  background: black;
+  color: white;
+  border: none;
+  width: 100%;
 }
 
-#checkoutButton:hover {
-    background: #cf711f;
-}
-
-/* === FACTURATION === */
-.billing-line {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    font-size: 15px;
-}
-
-.billing-line.total {
-    font-weight: bold;
-    font-size: 18px;
-    border-top: 1px solid #ddd;
-    padding-top: 8px;
-}
-
-/* === WHATSAPP FLOAT (GROS + PRO) === */
-.whatsapp-float {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-
-    width: 75px;       /* ✅ plus gros */
-    height: 75px;
-
-    background: #25D366;
-    color: white;
-
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 36px;   /* ✅ icône plus grande */
-
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-
-    z-index: 9999;
-    cursor: pointer;
-
-    animation: pulse 2s infinite;
-}
-
-.whatsapp-float:hover {
-    transform: scale(1.1);
-}
-
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(37,211,102,0.6); }
-    70% { box-shadow: 0 0 0 20px rgba(37,211,102,0); }
-    100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
-}
-
-/* === MODAL === */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-}
-
-.modal-content {
-    background-color: #fff;
-    margin: 20% auto;
-    padding: 20px;
-    border-radius: 12px;
-    max-width: 400px;
-    text-align: center;
-}
-
-/* === RESPONSIVE === */
-
-/* tablette */
-@media(max-width:900px){
-    .container {
-        flex-direction: column;
-    }
-
-    .gallery {
-        grid-template-columns: repeat(2, 1fr); /* 2 images */
-    }
-}
-
-/* mobile */
-@media(max-width:600px){
-
-    header {
-        padding: 80px 15px;
-    }
-
-    header h1 {
-        font-size: 1.8rem;
-    }
-
-    .gallery {
-        grid-template-columns: 1fr; /* 1 image */
-    }
-
-    .section {
-        padding: 20px;
-    }
-
-    .whatsapp-float {
-        width: 65px;
-        height: 65px;
-        font-size: 30px;
-    }
+.whatsapp {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 40px;
+  background: #25D366;
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
 }

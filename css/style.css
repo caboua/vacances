@@ -3,23 +3,29 @@ body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
   background: #f6f6f6;
+  color: #222;
 }
 
-/* === HERO IMAGE === */
-.hero {
-  height: 400px;
-  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-              url("../images/fond.jpg") center center / cover no-repeat;
-  position: relative;
+a {
+  text-decoration: none;
 }
 
-/* 🔥 améliore netteté mobile */
+/* === HERO IMAGE (CORRIGÉ NET) === */
 .hero {
-  image-rendering: auto;
+  height: 500px;
+
+  background-image: url("../images/fond.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
   background-size: cover;
+
+  position: relative;
+
+  /* améliore netteté */
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
 }
 
-/* texte sur image */
 .hero-overlay {
   position: absolute;
   bottom: 30px;
@@ -30,11 +36,13 @@ body {
 .hero-overlay h1 {
   margin: 0;
   font-size: 2.5rem;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 
 .hero-overlay p {
   margin-top: 10px;
   color: #f1c40f;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 
 /* === CONTAINER === */
@@ -62,7 +70,7 @@ body {
 
 .gallery img {
   width: 100%;
-  height: 200px;
+  height: 220px;
   object-fit: cover;
   border-radius: 10px;
 }
@@ -83,9 +91,14 @@ body {
 /* === CALENDRIER GOOGLE === */
 .calendar-iframe {
   width: 100%;
-  height: 400px;
+  height: 500px;
   border: none;
   margin-bottom: 20px;
+}
+
+/* === FLATPICKR CALENDAR === */
+#calendar {
+  margin-top: 20px;
 }
 
 /* === BOOKING === */
@@ -93,7 +106,7 @@ body {
   margin-top: 20px;
 }
 
-/* ligne adultes enfants */
+/* === LIGNE FLEX === */
 .row {
   display: flex;
   justify-content: space-between;
@@ -105,6 +118,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-top: 5px;
 }
 
 .counter button {
@@ -113,6 +127,11 @@ body {
   border-radius: 50%;
   border: 1px solid #ccc;
   background: white;
+  cursor: pointer;
+}
+
+.counter button:active {
+  transform: scale(0.95);
 }
 
 /* === PRIX === */
@@ -127,9 +146,10 @@ body {
 
 .billing h2 {
   margin-top: 10px;
+  font-size: 22px;
 }
 
-/* === BOUTON === */
+/* === BOUTON RESERVER === */
 .btn {
   width: 100%;
   padding: 15px;
@@ -139,13 +159,14 @@ body {
   border-radius: 10px;
   font-weight: bold;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .btn:hover {
   background: #cf711f;
 }
 
-/* === WHATSAPP === */
+/* === WHATSAPP FLOAT === */
 .whatsapp {
   position: fixed;
   bottom: 20px;
@@ -161,6 +182,32 @@ body {
   justify-content: center;
   box-shadow: 0 8px 25px rgba(0,0,0,0.3);
   z-index: 1000;
+  transition: 0.3s;
+}
+
+.whatsapp:hover {
+  transform: scale(1.1);
+}
+
+/* === MODAL === */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background: white;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 400px;
+  text-align: center;
 }
 
 /* === RESPONSIVE === */
@@ -179,7 +226,7 @@ body {
 @media(max-width:600px){
 
   .hero {
-    height: 250px;
+    height: 300px;
   }
 
   .hero-overlay h1 {
@@ -192,6 +239,16 @@ body {
 
   .row {
     flex-direction: column;
+  }
+
+  .calendar-iframe {
+    height: 350px;
+  }
+
+  .whatsapp {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
   }
 
 }

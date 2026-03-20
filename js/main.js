@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("checkoutButton");
 
   // =========================
-  // 📅 CALENDRIER
+  // 📅 CALENDRIER (IMMÉDIAT)
   // =========================
   const fp = flatpickr("#calendar", {
     locale: "fr",
@@ -31,11 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // =========================
-  // 🔴 CHARGEMENT ICS AIRBNB (CORRIGÉ)
+  // 🔴 ICS DIRECT + ANTI CACHE
   // =========================
-  fetch("https://api.allorigins.win/raw?url=" +
-    encodeURIComponent("https://www.airbnb.fr/calendar/ical/1637653042244841736.ics?t=b597fb5a299a46d589ae14b6b03e3b13")
-  )
+  const ICS_URL = "https://www.airbnb.fr/calendar/ical/1637653042244841736.ics";
+
+  fetch(ICS_URL + "?t=" + new Date().getTime())
   .then(res => res.text())
   .then(data => {
 
@@ -43,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     events.forEach(event => {
 
-      // Ignore fuseaux horaires → prend uniquement dates
       const startMatch = event.match(/DTSTART(?:;VALUE=DATE)?:(\d{8})/);
       const endMatch = event.match(/DTEND(?:;VALUE=DATE)?:(\d{8})/);
 
@@ -52,38 +51,29 @@ document.addEventListener("DOMContentLoaded", () => {
         let s = startMatch[1];
         let e = endMatch[1];
 
-        let start = new Date(
-          parseInt(s.substring(0,4)),
-          parseInt(s.substring(4,6)) - 1,
-          parseInt(s.substring(6,8))
-        );
-
-        let end = new Date(
-          parseInt(e.substring(0,4)),
-          parseInt(e.substring(4,6)) - 1,
-          parseInt(e.substring(6,8))
-        );
+        let start = new Date(s.substr(0,4), s.substr(4,2)-1, s.substr(6,2));
+        let end = new Date(e.substr(0,4), e.substr(4,2)-1, e.substr(6,2));
 
         while (start < end) {
           blockedDates.push(new Date(start));
           start.setDate(start.getDate() + 1);
         }
-
       }
-
     });
 
-    // Applique les dates bloquées
+    // 🔥 applique immédiatement
     fp.set("disable", blockedDates);
     fp.redraw();
 
+    console.log("✔ Calendrier synchronisé");
+
   })
-  .catch(() => {
-    console.log("Erreur chargement calendrier Airbnb");
+  .catch(err => {
+    console.log("❌ Erreur ICS :", err);
   });
 
   // =========================
-  // 💰 CALCUL PRIX
+  // 💰 PRIX
   // =========================
   function updatePrice() {
 
@@ -104,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     billing.innerHTML = `
       <p>${nights} nuits : ${price} €</p>
       <p>Taxe : ${taxe.toFixed(2)} €</p>
-      <p>Ménage : ${cleaning} €</p>
+      <p>Ménage : 120 €</p>
       <h2>Total : ${total.toFixed(2)} €</h2>
     `;
   }
@@ -139,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // =========================
-  // 🔴 VERIF DISPONIBILITÉ
+  // 🔴 VERIF
   // =========================
   function isBlocked(date) {
     return blockedDates.some(d =>
@@ -157,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // 📩 RESERVATION
+  // 📩 RESERVER
   // =========================
   btn.onclick = function(e) {
 
@@ -169,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!isRangeAvailable(startDate, endDate)) {
-      alert("❌ Indisponible pour cette période");
+      alert("❌ Indisponible");
       return;
     }
 
@@ -187,10 +177,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 Nous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.
 
-Adultes : ${adults}
-Enfants : ${children}
-
-Merci`
+Adultes: ${adults}
+Enfants: ${children}`
     );
 
     window.location.href =

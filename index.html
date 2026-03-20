@@ -8,16 +8,12 @@
 <title>Villa CABOUA – Location en Guadeloupe</title>
 
 <link rel="stylesheet" href="css/style.css">
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 </head>
 
 <body>
 
-<!-- ================= HERO ================= -->
 <header class="hero">
   <div class="hero-overlay">
     <h1>Villa CABOUA</h1>
@@ -27,22 +23,14 @@
 
 <div class="container">
 
-  <!-- ================= DESCRIPTION ================= -->
   <div class="card">
     <h2>Description</h2>
     <p>
       Villa moderne située en Guadeloupe, idéale pour un séjour en famille.
       Terrasse aménagée, jardin tropical, environnement calme.
     </p>
-    <ul>
-      <li>Suite parentale avec salle d’eau</li>
-      <li>2 chambres doubles climatisées</li>
-      <li>Canapé convertible</li>
-      <li>Terrasse et jardin</li>
-    </ul>
   </div>
 
-  <!-- ================= GALERIE ================= -->
   <div class="card">
     <h2>Galerie</h2>
     <div class="gallery">
@@ -52,38 +40,21 @@
       <img src="images/chambre2.jpeg">
       <img src="images/chambreparentale.jpeg">
       <img src="images/terrasse.jpeg">
-      <img src="images/sb1.jpeg">
-      <img src="images/sb1.1.jpeg">
-      <img src="images/sb2.jpeg">
     </div>
   </div>
 
-  <!-- ================= EQUIPEMENTS ================= -->
   <div class="card">
-    <h2>Équipements</h2>
-    <div class="equipments">
-      <div><i class="fa-solid fa-wifi"></i> Wifi</div>
-      <div><i class="fa-solid fa-snowflake"></i> Climatisation</div>
-      <div><i class="fa-solid fa-square-parking"></i> Parking</div>
-      <div><i class="fa-solid fa-bed"></i> 3 chambres</div>
-      <div><i class="fa-solid fa-tv"></i> TV</div>
-      <div><i class="fa-solid fa-utensils"></i> Cuisine équipée</div>
-    </div>
-  </div>
-
-  <!-- ================= DISPONIBILITES ================= -->
-  <div class="card" id="disponibilites">
     <h2>Disponibilités</h2>
 
-    <!-- Google Calendar -->
     <iframe
-class="calendar-iframe"
-src="https://calendar.google.com/calendar/embed?src=ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com&ctz=America/Guadeloupe&hl=fr&showPrint=0&showTabs=0">
-</iframe>
-    <!-- Calendrier de sélection -->
+      class="calendar-iframe"
+      src="https://calendar.google.com/calendar/embed?src=ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com&ctz=America/Guadeloupe&hl=fr">
+    </iframe>
+
     <div id="calendar"></div>
- <h2>Sélectionner vos dates</h2>
-    <!-- Réservation -->
+
+    <h2>Sélectionner vos dates</h2>
+
     <div class="booking">
 
       <div class="row">
@@ -106,30 +77,27 @@ src="https://calendar.google.com/calendar/embed?src=ds98qjiuc1uqumr9dc1nnaoag24p
         </div>
       </div>
 
-      <!-- Prix -->
       <div id="billing" class="billing"></div>
 
-      <!-- Bouton -->
       <button id="checkoutButton" class="btn">
-        Réserver maintenant
+        Réserver via WhatsApp
       </button>
 
     </div>
-
   </div>
 
 </div>
 
-<!-- ================= WHATSAPP ================= -->
-<a href="https://wa.me/590690520616" class="whatsapp">
-<a id="whatsappFloat" class="whatsapp">
+<!-- WHATSAPP FLOAT -->
+<a id="whatsappFloat"
+   href="https://wa.me/590690520616"
+   target="_blank"
+   class="whatsapp">
   <i class="fa-brands fa-whatsapp"></i>
- </a>
+</a>
 
-<!-- ================= SCRIPTS ================= -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
-
 <script src="js/main.js"></script>
 
 </body>

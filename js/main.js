@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const billing = document.getElementById("billing");
   const btn = document.getElementById("checkoutButton");
+  const whatsappBtn = document.getElementById("whatsappFloat");
 
   // =========================
   // 📅 CALENDRIER
@@ -31,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // =========================
-  // 🔴 CHARGEMENT ICS RAPIDE
+  // 🔴 ICS GOOGLE CALENDAR
   // =========================
   fetch("https://api.allorigins.win/raw?url=" +
     encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
@@ -42,10 +43,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const events = data.split("BEGIN:VEVENT");
 
     events.forEach(event => {
+
       const startMatch = event.match(/DTSTART:(\d{8})/);
       const endMatch = event.match(/DTEND:(\d{8})/);
 
       if (startMatch && endMatch) {
+
         let s = startMatch[1];
         let e = endMatch[1];
 
@@ -54,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         while (start < end) {
           blockedDates.push(new Date(start));
-          start.setDate(start.getDate()+1);
+          start.setDate(start.getDate() + 1);
         }
       }
     });
@@ -138,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // 📩 RESERVATION
+  // 📩 EMAIL RESERVATION
   // =========================
   btn.onclick = function(e) {
 
@@ -164,11 +167,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const subject = encodeURIComponent("Réservation Villa CABOUA");
 
     const body = encodeURIComponent(
-      `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.\n\nAdultes: ${adults}\nEnfants: ${children}`
+      `Bonjour,
+
+Nous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.
+
+Adultes: ${adults}
+Enfants: ${children}`
     );
 
-    window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href =
+      `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
+  };
+
+  // =========================
+  // 💬 WHATSAPP
+  // =========================
+  whatsappBtn.onclick = () => {
+
+    let msg = "Bonjour je souhaite des informations pour la Villa CABOUA";
+
+    if (startDate && endDate) {
+      msg = `Bonjour, je souhaite réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")} pour ${adults} adulte(s) et ${children} enfant(s).`;
+    }
+
+    window.open(
+      `https://wa.me/590690520616?text=${encodeURIComponent(msg)}`,
+      "_blank"
+    );
   };
 
 });
-

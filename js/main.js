@@ -9,16 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const billing = document.getElementById("billing");
   const btn = document.getElementById("checkoutButton");
+  const whatsappBtn = document.getElementById("whatsappFloat");
 
-  // =========================
-  // 📅 CALENDRIER
-  // =========================
+  // ================= CALENDRIER =================
   const fp = flatpickr("#calendar", {
     locale: "fr",
     inline: true,
     mode: "range",
     minDate: "today",
-    disableMobile: true,
 
     onChange: function(selectedDates) {
       if (selectedDates.length === 2) {
@@ -29,9 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // =========================
-  // 🔴 CHARGEMENT ICS
-  // =========================
+  // ================= ICS =================
   fetch("https://api.allorigins.win/raw?url=" +
     encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
   )
@@ -61,83 +57,43 @@ document.addEventListener("DOMContentLoaded", () => {
     fp.set("disable", blockedDates);
   });
 
-  // =========================
-  // 💰 PRIX
-  // =========================
+  // ================= PRIX =================
   function updatePrice() {
 
     if (!startDate || !endDate) return;
 
     let nights = (endDate - startDate) / (1000*60*60*24);
 
-    if (nights < 4) {
-      billing.innerHTML = "<p>Minimum 4 nuits</p>";
-      return;
-    }
-
     let price = nights * 140;
-    let taxe = (adults + children) * 1.5 * nights;
-    let cleaning = 120;
-    let total = price + taxe + cleaning;
 
     billing.innerHTML = `
-      <p>${nights} nuits : ${price} €</p>
-      <p>Taxe : ${taxe.toFixed(2)} €</p>
-      <p>Ménage : ${cleaning} €</p>
-      <h2>Total : ${total.toFixed(2)} €</h2>
+      <p>${nights} nuits</p>
+      <p>Total estimé : ${price} €</p>
     `;
   }
 
-  // =========================
-  // 👨‍👩‍👧 COMPTEURS
-  // =========================
-  function updateCounters() {
-    document.getElementById("adultCount").innerText = adults;
-    document.getElementById("childCount").innerText = children;
-    updatePrice();
-  }
-
+  // ================= COMPTEURS =================
   document.getElementById("adultPlus").onclick = () => {
     if (adults < 6) adults++;
-    updateCounters();
+    document.getElementById("adultCount").innerText = adults;
   };
 
   document.getElementById("adultMinus").onclick = () => {
     if (adults > 1) adults--;
-    updateCounters();
+    document.getElementById("adultCount").innerText = adults;
   };
 
   document.getElementById("childPlus").onclick = () => {
     if (adults + children < 8) children++;
-    updateCounters();
+    document.getElementById("childCount").innerText = children;
   };
 
   document.getElementById("childMinus").onclick = () => {
     if (children > 0) children--;
-    updateCounters();
+    document.getElementById("childCount").innerText = children;
   };
 
-  // =========================
-  // 🔴 DISPONIBILITÉ
-  // =========================
-  function isBlocked(date) {
-    return blockedDates.some(d =>
-      d.toDateString() === new Date(date).toDateString()
-    );
-  }
-
-  function isRangeAvailable(start, end) {
-    let current = new Date(start);
-    while (current < end) {
-      if (isBlocked(current)) return false;
-      current.setDate(current.getDate() + 1);
-    }
-    return true;
-  }
-
-  // =========================
-  // 📩 WHATSAPP
-  // =========================
+  // ================= EMAIL =================
   btn.onclick = function(e) {
 
     e.preventDefault();
@@ -147,15 +103,21 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (!isRangeAvailable(startDate, endDate)) {
-      alert("❌ Dates indisponibles");
-      return;
-    }
+    const subject = encodeURIComponent("Réservation Villa CABOUA");
 
-    let nights = (endDate - startDate) / (1000*60*60*24);
+    const body = encodeURIComponent(
+      `Bonjour,\n\nJe souhaite réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.\n\nAdultes: ${adults}\nEnfants: ${children}`
+    );
 
-    if (nights < 4) {
-      alert("Minimum 4 nuits");
+    window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
+  };
+
+  // ================= WHATSAPP =================
+  whatsappBtn.onclick = function(e) {
+    e.preventDefault();
+
+    if (!startDate || !endDate) {
+      alert("Sélectionnez vos dates");
       return;
     }
 

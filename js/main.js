@@ -3,129 +3,128 @@ document.addEventListener("DOMContentLoaded", () => {
   let startDate = null;
   let endDate = null;
   let blockedDates = [];
+
   let adults = 2;
   let children = 0;
 
   const billing = document.getElementById("billing");
   const btn = document.getElementById("checkoutButton");
-  const adultMinus = document.getElementById("adultMinus");
-  const adultPlus = document.getElementById("adultPlus");
-  const childMinus = document.getElementById("childMinus");
-  const childPlus = document.getElementById("childPlus");
-  const adultCount = document.getElementById("adultCount");
-  const childCount = document.getElementById("childCount");
 
-  const NIGHT_PRICE = 140;
-  const CLEANING_FEE = 120;
-  const TAX_PER_PERSON = 1.5;
-  const MIN_NIGHTS = 4;
-
-  // ========================
-  // 📅 CALENDRIER FLATPICKR
-  // ========================
+  // =========================
+  // 📅 CALENDRIER
+  // =========================
   const fp = flatpickr("#calendar", {
     locale: "fr",
-    mode: "range",
     inline: true,
+    mode: "range",
     minDate: "today",
-    dateFormat: "d/m/Y",
     showMonths: 1,
     disableMobile: true,
+
     onChange: function(selectedDates) {
       if (selectedDates.length === 2) {
         startDate = selectedDates[0];
         endDate = selectedDates[1];
-        updateBilling();
+        updatePrice();
       }
     }
   });
 
-  // ========================
-  // 🔴 CHARGER DATES BLOQUEES ICS
-  // ========================
+  // =========================
+  // 🔴 CHARGEMENT ICS RAPIDE
+  // =========================
   fetch("https://api.allorigins.win/raw?url=" +
     encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
   )
   .then(res => res.text())
-  .then(text => {
+  .then(data => {
 
-    const lines = text.split("\n");
-    let start, end;
+    const events = data.split("BEGIN:VEVENT");
 
-    lines.forEach(line => {
-      if (line.includes("DTSTART")) start = line.split(":")[1].trim();
-      if (line.includes("DTEND")) {
-        end = line.split(":")[1].trim();
+    events.forEach(event => {
+      const startMatch = event.match(/DTSTART:(\d{8})/);
+      const endMatch = event.match(/DTEND:(\d{8})/);
 
-        let s = new Date(start.substring(0,4), start.substring(4,6)-1, start.substring(6,8));
-        let e = new Date(end.substring(0,4), end.substring(4,6)-1, end.substring(6,8));
+      if (startMatch && endMatch) {
+        let s = startMatch[1];
+        let e = endMatch[1];
 
-        while (s < e) {
-          blockedDates.push(new Date(s.toDateString()));
-          s.setDate(s.getDate()+1);
+        let start = new Date(s.substr(0,4), s.substr(4,2)-1, s.substr(6,2));
+        let end = new Date(e.substr(0,4), e.substr(4,2)-1, e.substr(6,2));
+
+        while (start < end) {
+          blockedDates.push(new Date(start));
+          start.setDate(start.getDate()+1);
         }
       }
     });
 
     fp.set("disable", blockedDates);
 
-  })
-  .catch(err => console.log("Erreur ICS :", err));
+  });
 
-  // ========================
-  // 🔴 CALCUL ET AFFICHAGE PRIX
-  // ========================
-  function updateBilling() {
-    if(!startDate || !endDate) return;
+  // =========================
+  // 💰 CALCUL PRIX
+  // =========================
+  function updatePrice() {
 
-    const nights = Math.round((endDate - startDate)/(1000*60*60*24));
-    if(nights < MIN_NIGHTS){
-      billing.innerHTML = `<p style="color:red;">Séjour minimum ${MIN_NIGHTS} nuits</p>`;
+    if (!startDate || !endDate) return;
+
+    let nights = (endDate - startDate) / (1000*60*60*24);
+
+    if (nights < 4) {
+      billing.innerHTML = "<p>Minimum 4 nuits</p>";
       return;
     }
 
-    const subtotal = nights * NIGHT_PRICE;
-    const tax = (adults + children) * TAX_PER_PERSON;
-    const total = subtotal + CLEANING_FEE + tax;
+    let price = nights * 140;
+    let taxe = (adults + children) * 1.5 * nights;
+    let cleaning = 120;
+    let total = price + taxe + cleaning;
 
     billing.innerHTML = `
-      <div class="billing-line">
-        <span>${nights} nuits</span>
-        <span>${subtotal} €</span>
-      </div>
-      <div class="billing-line">
-        <span>Adultes: ${adults}</span>
-        <span>Enfants: ${children}</span>
-      </div>
-      <div class="billing-line">
-        <span>Frais ménage</span>
-        <span>${CLEANING_FEE} €</span>
-      </div>
-      <div class="billing-line">
-        <span>Taxe</span>
-        <span>${tax.toFixed(2)} €</span>
-      </div>
-      <div class="billing-line total">
-        <span>Total final</span>
-        <span>${total.toFixed(2)} €</span>
-      </div>
+      <p>${nights} nuits : ${price} €</p>
+      <p>Taxe : ${taxe.toFixed(2)} €</p>
+      <p>Ménage : ${cleaning} €</p>
+      <h2>Total : ${total.toFixed(2)} €</h2>
     `;
   }
 
-  // ========================
-  // 🔴 GESTION COUNTERS
-  // ========================
-  adultPlus.onclick = () => { if(adults<6){ adults++; adultCount.textContent = adults; updateBilling(); }};
-  adultMinus.onclick = () => { if(adults>1){ adults--; adultCount.textContent = adults; updateBilling(); }};
-  childPlus.onclick = () => { if(adults+children<8){ children++; childCount.textContent = children; updateBilling(); }};
-  childMinus.onclick = () => { if(children>0){ children--; childCount.textContent = children; updateBilling(); }};
+  // =========================
+  // 👨‍👩‍👧 COMPTEURS
+  // =========================
+  function updateCounters() {
+    document.getElementById("adultCount").innerText = adults;
+    document.getElementById("childCount").innerText = children;
+    updatePrice();
+  }
 
-  // ========================
-  // 🔴 VERIFICATION DISPO
-  // ========================
+  document.getElementById("adultPlus").onclick = () => {
+    if (adults < 6) adults++;
+    updateCounters();
+  };
+
+  document.getElementById("adultMinus").onclick = () => {
+    if (adults > 1) adults--;
+    updateCounters();
+  };
+
+  document.getElementById("childPlus").onclick = () => {
+    if (adults + children < 8) children++;
+    updateCounters();
+  };
+
+  document.getElementById("childMinus").onclick = () => {
+    if (children > 0) children--;
+    updateCounters();
+  };
+
+  // =========================
+  // 🔴 VERIF DISPONIBILITÉ
+  // =========================
   function isBlocked(date) {
     return blockedDates.some(d =>
-      new Date(d).toDateString() === new Date(date).toDateString()
+      d.toDateString() === new Date(date).toDateString()
     );
   }
 
@@ -133,40 +132,39 @@ document.addEventListener("DOMContentLoaded", () => {
     let current = new Date(start);
     while (current < end) {
       if (isBlocked(current)) return false;
-      current.setDate(current.getDate()+1);
+      current.setDate(current.getDate() + 1);
     }
     return true;
   }
 
-  // ========================
-  // 🔴 BOUTON RESERVER
-  // ========================
+  // =========================
+  // 📩 RESERVATION
+  // =========================
   btn.onclick = function(e) {
+
     e.preventDefault();
 
-    if(!startDate || !endDate){
-      alert("Veuillez sélectionner vos dates");
+    if (!startDate || !endDate) {
+      alert("Sélectionnez vos dates");
       return;
     }
 
-    const nights = Math.round((endDate - startDate)/(1000*60*60*24));
-    if(nights < MIN_NIGHTS){
-      alert(`Séjour minimum ${MIN_NIGHTS} nuits`);
+    if (!isRangeAvailable(startDate, endDate)) {
+      alert("❌ Dates indisponibles");
       return;
     }
 
-    if(!isRangeAvailable(startDate, endDate)){
-      alert("❌ Indisponible pour cette période");
+    let nights = (endDate - startDate) / (1000*60*60*24);
+
+    if (nights < 4) {
+      alert("Minimum 4 nuits");
       return;
     }
-
-    const subtotal = nights * NIGHT_PRICE;
-    const tax = (adults + children) * TAX_PER_PERSON;
-    const total = subtotal + CLEANING_FEE + tax;
 
     const subject = encodeURIComponent("Réservation Villa CABOUA");
+
     const body = encodeURIComponent(
-      `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.\nAdultes: ${adults}\nEnfants: ${children}\nFrais ménage: ${CLEANING_FEE} €\nTaxe: ${tax.toFixed(2)} €\nTotal: ${total.toFixed(2)} €`
+      `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.\n\nAdultes: ${adults}\nEnfants: ${children}`
     );
 
     window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;

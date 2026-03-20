@@ -1,4 +1,3 @@
-/* === GLOBAL === */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -6,24 +5,12 @@ body {
   color: #222;
 }
 
-a {
-  text-decoration: none;
-}
-
-/* === HERO IMAGE (CORRIGÉ NET) === */
 .hero {
   height: 500px;
-
   background-image: url("../images/fond.jpg");
-  background-position: center center;
-  background-repeat: no-repeat;
   background-size: cover;
-
+  background-position: center;
   position: relative;
-
-  /* améliore netteté */
-  image-rendering: -webkit-optimize-contrast;
-  transform: translateZ(0);
 }
 
 .hero-overlay {
@@ -33,26 +20,12 @@ a {
   color: white;
 }
 
-.hero-overlay h1 {
-  margin: 0;
-  font-size: 2.5rem;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-}
-
-.hero-overlay p {
-  margin-top: 10px;
-  color: #f1c40f;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-}
-
-/* === CONTAINER === */
 .container {
   max-width: 1100px;
   margin: auto;
   padding: 20px;
 }
 
-/* === CARD === */
 .card {
   background: white;
   padding: 20px;
@@ -61,7 +34,6 @@ a {
   box-shadow: 0 5px 20px rgba(0,0,0,0.08);
 }
 
-/* === GALERIE === */
 .gallery {
   display: grid;
   grid-template-columns: repeat(3,1fr);
@@ -75,59 +47,28 @@ a {
   border-radius: 10px;
 }
 
-/* === ÉQUIPEMENTS === */
-.equipments {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 10px;
-}
-
-.equipments div {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* === CALENDRIER GOOGLE === */
 .calendar-iframe {
   width: 100%;
   height: 500px;
   border: none;
   margin-bottom: 20px;
-}
-.calendar-iframe {
-  width: 100%;
-  height: 500px;
-  border: none;
-}
-
-/* cache le bas du calendrier (zone fuseau) */
-.calendar-iframe {
   clip-path: inset(0px 0px 30px 0px);
 }
-/* === FLATPICKR CALENDAR === */
-#calendar {
-  margin-top: 20px;
-}
 
-/* === BOOKING === */
 .booking {
   margin-top: 20px;
 }
 
-/* === LIGNE FLEX === */
 .row {
   display: flex;
   justify-content: space-between;
   gap: 20px;
 }
 
-/* === COUNTER === */
 .counter {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 5px;
 }
 
 .counter button {
@@ -139,26 +80,10 @@ a {
   cursor: pointer;
 }
 
-.counter button:active {
-  transform: scale(0.95);
-}
-
-/* === PRIX === */
 .billing {
   margin: 20px 0;
-  font-size: 16px;
 }
 
-.billing p {
-  margin: 5px 0;
-}
-
-.billing h2 {
-  margin-top: 10px;
-  font-size: 22px;
-}
-
-/* === BOUTON RESERVER === */
 .btn {
   width: 100%;
   padding: 15px;
@@ -168,15 +93,14 @@ a {
   border-radius: 10px;
   font-weight: bold;
   cursor: pointer;
-  font-size: 16px;
 }
 
 .btn:hover {
   background: #cf711f;
 }
 
-/* === WHATSAPP FLOAT === */
-.whatsapp {
+/* WHATSAPP FLOAT */
+.whatsapp#whatsappFloat {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -191,57 +115,13 @@ a {
   justify-content: center;
   box-shadow: 0 8px 25px rgba(0,0,0,0.3);
   z-index: 1000;
-  transition: 0.3s;
 }
 
-.whatsapp:hover {
+.whatsapp#whatsappFloat:hover {
   transform: scale(1.1);
 }
 
-/* === MODAL === */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 2000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-}
-
-.modal-content {
-  background: white;
-  margin: 10% auto;
-  padding: 20px;
-  border-radius: 12px;
-  max-width: 400px;
-  text-align: center;
-}
-
-/* === RESPONSIVE === */
-@media(max-width:900px){
-
-  .gallery {
-    grid-template-columns: repeat(2,1fr);
-  }
-
-  .equipments {
-    grid-template-columns: repeat(2,1fr);
-  }
-
-}
-
 @media(max-width:600px){
-
-  .hero {
-    height: 300px;
-  }
-
-  .hero-overlay h1 {
-    font-size: 1.6rem;
-  }
-
   .gallery {
     grid-template-columns: 1fr;
   }
@@ -253,11 +133,4 @@ a {
   .calendar-iframe {
     height: 350px;
   }
-
-  .whatsapp {
-    width: 60px;
-    height: 60px;
-    font-size: 28px;
-  }
-
 }

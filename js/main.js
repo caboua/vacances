@@ -171,3 +171,16 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
 });
+document.getElementById("whatsappFloat").onclick = () => {
+
+    let msg = "Bonjour je souhaite des infos pour Villa CABOUA";
+
+    if(startDate && endDate){
+        msg = `Bonjour, je souhaite faire une réservation du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")} pour ${adults} adulte(s) et ${children} enfant(s)`;
+    }
+
+    window.open(`https://wa.me/590690520616?text=${encodeURIComponent(msg)}`, "_blank");
+};
+
+});
+

@@ -8,8 +8,8 @@ body {
 .hero {
   height: 500px;
   background-image: url("../images/fond.jpg");
-  background-size: cover;
   background-position: center;
+  background-size: cover;
   position: relative;
 }
 
@@ -47,12 +47,20 @@ body {
   border-radius: 10px;
 }
 
+.equipments {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 10px;
+}
+
 .calendar-iframe {
   width: 100%;
   height: 500px;
   border: none;
-  margin-bottom: 20px;
-  clip-path: inset(0px 0px 30px 0px);
+}
+
+#calendar {
+  margin-top: 20px;
 }
 
 .booking {
@@ -62,7 +70,6 @@ body {
 .row {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
 }
 
 .counter {
@@ -91,12 +98,7 @@ body {
   color: white;
   border: none;
   border-radius: 10px;
-  font-weight: bold;
   cursor: pointer;
-}
-
-.btn:hover {
-  background: #cf711f;
 }
 
 /* WHATSAPP FLOAT */
@@ -119,6 +121,12 @@ body {
 
 .whatsapp#whatsappFloat:hover {
   transform: scale(1.1);
+}
+
+@media(max-width:900px){
+  .gallery {
+    grid-template-columns: repeat(2,1fr);
+  }
 }
 
 @media(max-width:600px){

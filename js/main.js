@@ -31,10 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // =========================
-  // 🔴 CHARGEMENT ICS RAPIDE
+  // 🔴 CHARGEMENT ICS AIRBNB (CORRIGÉ)
   // =========================
   fetch("https://api.allorigins.win/raw?url=" +
-    encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
+    encodeURIComponent("https://www.airbnb.fr/calendar/ical/1637653042244841736.ics?t=b597fb5a299a46d589ae14b6b03e3b13")
   )
   .then(res => res.text())
   .then(data => {
@@ -42,25 +42,44 @@ document.addEventListener("DOMContentLoaded", () => {
     const events = data.split("BEGIN:VEVENT");
 
     events.forEach(event => {
-      const startMatch = event.match(/DTSTART:(\d{8})/);
-      const endMatch = event.match(/DTEND:(\d{8})/);
+
+      // Ignore fuseaux horaires → prend uniquement dates
+      const startMatch = event.match(/DTSTART(?:;VALUE=DATE)?:(\d{8})/);
+      const endMatch = event.match(/DTEND(?:;VALUE=DATE)?:(\d{8})/);
 
       if (startMatch && endMatch) {
+
         let s = startMatch[1];
         let e = endMatch[1];
 
-        let start = new Date(s.substr(0,4), s.substr(4,2)-1, s.substr(6,2));
-        let end = new Date(e.substr(0,4), e.substr(4,2)-1, e.substr(6,2));
+        let start = new Date(
+          parseInt(s.substring(0,4)),
+          parseInt(s.substring(4,6)) - 1,
+          parseInt(s.substring(6,8))
+        );
+
+        let end = new Date(
+          parseInt(e.substring(0,4)),
+          parseInt(e.substring(4,6)) - 1,
+          parseInt(e.substring(6,8))
+        );
 
         while (start < end) {
           blockedDates.push(new Date(start));
-          start.setDate(start.getDate()+1);
+          start.setDate(start.getDate() + 1);
         }
+
       }
+
     });
 
+    // Applique les dates bloquées
     fp.set("disable", blockedDates);
+    fp.redraw();
 
+  })
+  .catch(() => {
+    console.log("Erreur chargement calendrier Airbnb");
   });
 
   // =========================
@@ -150,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!isRangeAvailable(startDate, endDate)) {
-      alert("❌ Dates indisponibles");
+      alert("❌ Indisponible pour cette période");
       return;
     }
 
@@ -164,10 +183,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const subject = encodeURIComponent("Réservation Villa CABOUA");
 
     const body = encodeURIComponent(
-      `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.\n\nAdultes: ${adults}\nEnfants: ${children}`
+      `Bonjour,
+
+Nous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.
+
+Adultes : ${adults}
+Enfants : ${children}
+
+Merci`
     );
 
-    window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href =
+      `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
   };
 
 });

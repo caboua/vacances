@@ -10,11 +10,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const billing = document.getElementById("billing");
   const btn = document.getElementById("checkoutButton");
 
+  // =========================
+  // 📅 CALENDRIER
+  // =========================
   const fp = flatpickr("#calendar", {
     locale: "fr",
     inline: true,
     mode: "range",
     minDate: "today",
+    showMonths: 1,
     disableMobile: true,
 
     onChange: function(selectedDates) {
@@ -26,6 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // =========================
+  // 🔴 CHARGEMENT ICS RAPIDE
+  // =========================
   fetch("https://api.allorigins.win/raw?url=" +
     encodeURIComponent("https://calendar.google.com/calendar/ical/ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com/public/basic.ics")
   )
@@ -53,9 +60,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     fp.set("disable", blockedDates);
+
   });
 
+  // =========================
+  // 💰 CALCUL PRIX
+  // =========================
   function updatePrice() {
+
     if (!startDate || !endDate) return;
 
     let nights = (endDate - startDate) / (1000*60*60*24);
@@ -78,6 +90,9 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
+  // =========================
+  // 👨‍👩‍👧 COMPTEURS
+  // =========================
   function updateCounters() {
     document.getElementById("adultCount").innerText = adults;
     document.getElementById("childCount").innerText = children;
@@ -104,6 +119,9 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCounters();
   };
 
+  // =========================
+  // 🔴 VERIF DISPONIBILITÉ
+  // =========================
   function isBlocked(date) {
     return blockedDates.some(d =>
       d.toDateString() === new Date(date).toDateString()
@@ -119,6 +137,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
+  // =========================
+  // 📩 RESERVATION
+  // =========================
   btn.onclick = function(e) {
 
     e.preventDefault();
@@ -140,18 +161,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const message = `Bonjour, je souhaite réserver la Villa CABOUA :
+    const subject = encodeURIComponent("Réservation Villa CABOUA");
 
-📅 Du : ${startDate.toLocaleDateString("fr-FR")}
-📅 Au : ${endDate.toLocaleDateString("fr-FR")}
+    const body = encodeURIComponent(
+      `Bonjour,\n\nNous souhaitons réserver du ${startDate.toLocaleDateString("fr-FR")} au ${endDate.toLocaleDateString("fr-FR")}.\n\nAdultes: ${adults}\nEnfants: ${children}`
+    );
 
-👨 Adultes : ${adults}
-👶 Enfants : ${children}`;
-
-    const phone = "590690520616";
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-
-    window.open(url, "_blank");
+    window.location.href = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
   };
 
 });

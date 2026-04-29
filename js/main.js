@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // =========================
-  // 🔴 CHARGEMENT ICS RAPIDE
+  // 🔴 CHARGEMENT ICS
   // =========================
   fetch(
     "https://api.allorigins.win/raw?url=" +
@@ -88,13 +88,24 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const price = nights * 140;
+    // 💰 Base (2 adultes inclus)
+    const basePrice = nights * 110;
+
+    // ➕ Supplément adultes
+    const extraAdults = Math.max(0, adults - 2);
+    const extraCost = extraAdults * 15 * nights;
+
+    // 🧾 Taxe
     const taxe = (adults + children) * 1.5 * nights;
-    const cleaning = 120;
-    const total = price + taxe + cleaning;
+
+    // 🧹 Ménage
+    const cleaning = 80;
+
+    const total = basePrice + extraCost + taxe + cleaning;
 
     billing.innerHTML = `
-      <p>${nights} nuits : ${price} €</p>
+      <p>${nights} nuits : ${basePrice} €</p>
+      <p>Supplément adultes : ${extraCost} €</p>
       <p>Taxe : ${taxe.toFixed(2)} €</p>
       <p>Ménage : ${cleaning} €</p>
       <h2>Total : ${total.toFixed(2)} €</h2>
@@ -178,13 +189,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const mailtoLink = `mailto:villa.caboua@gmail.com?subject=${subject}&body=${body}`;
 
-    // Mobile + desktop
     window.location.href = mailtoLink;
   }
 
   btn.addEventListener("click", handleReservation, { passive: false });
 
-  // Fallback tactile mobile
+  // fallback mobile
   let touched = false;
   btn.addEventListener(
     "touchend",

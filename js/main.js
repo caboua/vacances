@@ -83,8 +83,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const nights = (endDate - startDate) / (1000 * 60 * 60 * 24);
 
-    if (nights < 4) {
-      billing.innerHTML = "<p>Minimum 4 nuits</p>";
+    if (nights < 2) {
+      billing.innerHTML = "<p>Minimum 2 nuits</p>";
       return;
     }
 

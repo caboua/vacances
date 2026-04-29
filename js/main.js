@@ -16,8 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  billing.innerHTML = `<p><strong>À partir de 110 € / nuit (2 personnes)</strong></p>`;
+  // 🏷️ Texte de base
+  const baseText = `<p><strong>À partir de 110 € / nuit (2 personnes)</strong></p>`;
+  billing.innerHTML = baseText;
 
+  // =========================
+  // 📅 CALENDRIER
+  // =========================
   const fp = flatpickr("#calendar", {
     locale: "fr",
     inline: true,
@@ -34,6 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // =========================
+  // 🔴 CHARGEMENT ICS
+  // =========================
   fetch(
     "https://api.allorigins.win/raw?url=" +
       encodeURIComponent(
@@ -68,39 +76,50 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Erreur de chargement du calendrier ICS :", error);
     });
 
+  // =========================
+  // 💰 CALCUL PRIX
+  // =========================
   function updatePrice() {
     if (!startDate || !endDate) {
-      billing.innerHTML = `<p><strong>À partir de 110 € / nuit (2 personnes)</strong></p>`;
+      billing.innerHTML = baseText;
       return;
     }
 
     const nights = (endDate - startDate) / (1000 * 60 * 60 * 24);
 
     if (nights < 2) {
-      billing.innerHTML = `
-        <p><strong>À partir de 110 € / nuit (2 personnes)</strong></p>
-        <p>Minimum 2 nuits</p>
-      `;
+      billing.innerHTML = baseText + `<p>Minimum 2 nuits</p>`;
       return;
     }
 
+    // 💰 Base (2 adultes inclus)
     const basePrice = nights * 110;
-    const extraAdults = Math.max(0, adults - 2);
+
+    // ➕ Supplément à partir du 3ème adulte
+    const extraAdults = adults > 2 ? adults - 2 : 0;
     const extraCost = extraAdults * 15 * nights;
+
+    // 🧾 Taxe
     const taxe = (adults + children) * 1.5 * nights;
+
+    // 🧹 Ménage
     const cleaning = 80;
+
     const total = basePrice + extraCost + taxe + cleaning;
 
     billing.innerHTML = `
-      <p><strong>À partir de 110 € / nuit (2 personnes)</strong></p>
+      ${baseText}
       <p>${nights} nuits : ${basePrice} €</p>
-      <p>Supplément adulte (${extraAdults}) : ${extraCost} €</p>
+      <p>Supplément adultes (${extraAdults}) : ${extraCost} €</p>
       <p>Taxe : ${taxe.toFixed(2)} €</p>
       <p>Ménage : ${cleaning} €</p>
       <h2>Total : ${total.toFixed(2)} €</h2>
     `;
   }
 
+  // =========================
+  // 👨‍👩‍👧 COMPTEURS
+  // =========================
   function updateCounters() {
     adultCount.innerText = adults;
     childCount.innerText = children;
@@ -127,6 +146,9 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCounters();
   });
 
+  // =========================
+  // 🔴 VERIF DISPONIBILITÉ
+  // =========================
   function isBlocked(date) {
     return blockedDates.some(
       (d) => d.toDateString() === new Date(date).toDateString()
@@ -142,6 +164,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
+  // =========================
+  // 📩 RESERVATION
+  // =========================
   function handleReservation(event) {
     if (event) event.preventDefault();
 

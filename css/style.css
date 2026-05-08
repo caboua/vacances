@@ -1,4 +1,6 @@
-/* === GLOBAL === */
+/* =========================================================
+   GLOBAL
+========================================================= */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -7,16 +9,18 @@ body {
   line-height: 1.6;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 a {
   text-decoration: none;
   color: inherit;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-/* === NAVIGATION === */
+/* =========================================================
+   NAVIGATION
+========================================================= */
 .top-nav {
   width: 100%;
   background: rgba(255,255,255,0.96);
@@ -57,14 +61,19 @@ html {
   width: 100%;
 }
 
-/* === HERO IMAGE === */
+/* =========================================================
+   HERO
+========================================================= */
 .hero {
-  height: 500px;
+  height: 560px;
+
   background-image: url("../images/fond.jpg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
+
   position: relative;
+
   image-rendering: -webkit-optimize-contrast;
   transform: translateZ(0);
 }
@@ -73,78 +82,95 @@ html {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0.15));
+
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.70),
+    rgba(0,0,0,0.15)
+  );
 }
 
 .hero-overlay {
   position: absolute;
-  bottom: 40px;
-  left: 40px;
+  bottom: 70px;
+  left: 80px;
   right: 20px;
+  max-width: 750px;
   color: white;
   z-index: 2;
 }
 
 .hero-overlay h1 {
   margin: 0;
-  font-size: 3rem;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  font-size: 4rem;
+  line-height: 1.1;
+  text-shadow: 0 3px 10px rgba(0,0,0,0.5);
 }
 
 .hero-overlay p {
-  margin-top: 12px;
+  margin-top: 16px;
+  font-size: 1.35rem;
   color: #f1c40f;
-  font-size: 1.1rem;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 
 .small-hero {
-  height: 300px;
+  height: 320px;
 }
 
-/* === CONTAINER === */
+/* =========================================================
+   CONTAINER
+========================================================= */
 .container {
-  max-width: 1100px;
+  max-width: 1180px;
   margin: auto;
-  padding: 25px;
+  padding: 35px 30px;
 }
 
-/* === CARD === */
+/* =========================================================
+   CARD
+========================================================= */
 .card {
   background: white;
-  padding: 28px;
-  border-radius: 18px;
-  margin-bottom: 30px;
+  padding: 35px;
+  border-radius: 20px;
+  margin-bottom: 35px;
   box-shadow: 0 6px 25px rgba(0,0,0,0.08);
 }
 
 .card h2 {
   margin-top: 0;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   color: #0d8f5b;
-  font-size: 1.8rem;
+  font-size: 2rem;
+}
+
+.card p {
+  margin-bottom: 16px;
 }
 
 .card ul {
-  padding-left: 20px;
+  padding-left: 22px;
 }
 
 .card li {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
-/* === GALERIE === */
+/* =========================================================
+   GALERIE
+========================================================= */
 .gallery {
   display: grid;
   grid-template-columns: repeat(3,1fr);
-  gap: 12px;
+  gap: 16px;
 }
 
 .gallery img {
   width: 100%;
-  height: 240px;
+  height: 260px;
   object-fit: cover;
-  border-radius: 14px;
+  border-radius: 16px;
   transition: 0.3s;
   cursor: pointer;
 }
@@ -153,20 +179,25 @@ html {
   transform: scale(1.02);
 }
 
-/* === ÉQUIPEMENTS === */
+/* =========================================================
+   ÉQUIPEMENTS
+========================================================= */
 .equipments {
   display: grid;
   grid-template-columns: repeat(4,1fr);
-  gap: 14px;
+  gap: 16px;
 }
 
 .equipments div {
   display: flex;
   align-items: center;
   gap: 10px;
+
   background: #f8f8f8;
-  padding: 12px;
-  border-radius: 12px;
+
+  padding: 14px;
+  border-radius: 14px;
+
   transition: 0.3s;
 }
 
@@ -179,18 +210,21 @@ html {
   font-size: 18px;
 }
 
-/* === AVIS CLIENTS === */
+/* =========================================================
+   AVIS CLIENTS
+========================================================= */
 .reviews {
   display: grid;
-  grid-template-columns: repeat(2,1fr);
+  grid-template-columns: repeat(4,1fr);
   gap: 20px;
 }
 
 .review {
   background: #fafafa;
-  padding: 20px;
-  border-radius: 14px;
+  padding: 22px;
+  border-radius: 16px;
   border: 1px solid #ececec;
+  min-height: 210px;
 }
 
 .review p {
@@ -202,16 +236,21 @@ html {
   font-size: 22px;
 }
 
-/* === AVIS CLIQUABLES === */
+/* =========================================================
+   AVIS CLIQUABLES
+========================================================= */
 .more-reviews {
   margin-top: 25px;
+
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 15px;
 }
 
 .review-card {
   background: #fafafa;
   border-radius: 14px;
   padding: 18px;
-  margin-bottom: 15px;
   border: 1px solid #ececec;
   transition: 0.3s;
 }
@@ -237,7 +276,9 @@ html {
   line-height: 1.7;
 }
 
-/* === FAQ === */
+/* =========================================================
+   FAQ
+========================================================= */
 .faq-item {
   margin-bottom: 25px;
   padding-bottom: 20px;
@@ -249,35 +290,45 @@ html {
   margin-bottom: 10px;
 }
 
-/* === CALENDRIER GOOGLE === */
+/* =========================================================
+   CALENDRIER
+========================================================= */
 .calendar-iframe {
   width: 100%;
-  height: 500px;
+  height: 560px;
   border: none;
   margin-bottom: 20px;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
+
   clip-path: inset(0px 0px 30px 0px);
 }
 
-/* === FLATPICKR === */
+/* =========================================================
+   FLATPICKR
+========================================================= */
 #calendar {
   margin-top: 20px;
 }
 
-/* === BOOKING === */
+/* =========================================================
+   BOOKING
+========================================================= */
 .booking {
   margin-top: 20px;
+  max-width: 700px;
 }
 
-/* === FLEX ROW === */
 .row {
   display: flex;
   justify-content: space-between;
   gap: 20px;
+  max-width: 600px;
 }
 
-/* === COUNTER === */
+/* =========================================================
+   COUNTER
+========================================================= */
 .counter {
   display: flex;
   align-items: center;
@@ -288,11 +339,16 @@ html {
 .counter button {
   width: 36px;
   height: 36px;
+
   border-radius: 50%;
   border: 1px solid #ccc;
+
   background: white;
+
   cursor: pointer;
+
   transition: 0.2s;
+
   font-size: 18px;
 }
 
@@ -304,12 +360,16 @@ html {
   transform: scale(0.95);
 }
 
-/* === PRIX === */
+/* =========================================================
+   PRIX
+========================================================= */
 .billing {
   margin: 25px 0;
   font-size: 16px;
+
   background: #fafafa;
-  padding: 18px;
+
+  padding: 20px;
   border-radius: 14px;
 }
 
@@ -319,40 +379,63 @@ html {
 
 .billing h2 {
   margin-top: 14px;
-  font-size: 24px;
+  font-size: 26px;
 }
 
-/* === BOUTON === */
+/* =========================================================
+   BOUTON
+========================================================= */
 .btn {
   width: 100%;
-  padding: 17px;
-  background: linear-gradient(135deg, #e67e22, #d96c10);
+
+  padding: 18px;
+
+  background: linear-gradient(
+    135deg,
+    #e67e22,
+    #d96c10
+  );
+
   color: white;
+
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
+
   font-weight: bold;
-  cursor: pointer;
   font-size: 17px;
+
+  cursor: pointer;
+
   transition: 0.3s;
+
   box-shadow: 0 6px 20px rgba(230,126,34,0.3);
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, #cf711f, #c8650f);
+
+  background: linear-gradient(
+    135deg,
+    #cf711f,
+    #c8650f
+  );
 }
 
-/* === FOOTER === */
+/* =========================================================
+   FOOTER
+========================================================= */
 .footer {
   background: #111;
   color: white;
   text-align: center;
-  padding: 35px 20px;
+
+  padding: 40px 20px;
+
   margin-top: 40px;
 }
 
 .footer p {
-  margin: 8px 0;
+  margin: 10px 0;
 }
 
 .footer a {
@@ -364,22 +447,33 @@ html {
   color: white;
 }
 
-/* === WHATSAPP FLOAT === */
+/* =========================================================
+   WHATSAPP
+========================================================= */
 .whatsapp {
   position: fixed;
+
   bottom: 20px;
   right: 20px;
+
   width: 72px;
   height: 72px;
+
   background: #25D366;
   color: white;
+
   font-size: 34px;
+
   border-radius: 50%;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+
   z-index: 3000;
+
   transition: 0.3s;
 }
 
@@ -387,29 +481,28 @@ html {
   transform: scale(1.1);
 }
 
-/* === MODAL === */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 4000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-}
+/* =========================================================
+   RESPONSIVE TABLET
+========================================================= */
+@media(max-width:900px){
 
-.modal-content {
-  background: white;
-  margin: 10% auto;
-  padding: 25px;
-  border-radius: 16px;
-  max-width: 420px;
-  text-align: center;
-}
+  .hero {
+    height: 420px;
+  }
 
-/* === RESPONSIVE TABLET === */
-@media(max-width:900px) {
+  .hero-overlay {
+    left: 35px;
+    bottom: 35px;
+  }
+
+  .hero-overlay h1 {
+    font-size: 2.8rem;
+  }
+
+  .hero-overlay p {
+    font-size: 1.1rem;
+  }
+
   .gallery {
     grid-template-columns: repeat(2,1fr);
   }
@@ -419,12 +512,20 @@ html {
   }
 
   .reviews {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .more-reviews {
     grid-template-columns: 1fr;
   }
+
 }
 
-/* === RESPONSIVE MOBILE === */
-@media(max-width:600px) {
+/* =========================================================
+   RESPONSIVE MOBILE
+========================================================= */
+@media(max-width:600px){
+
   .hero {
     height: 320px;
   }
@@ -450,6 +551,10 @@ html {
     grid-template-columns: 1fr;
   }
 
+  .reviews {
+    grid-template-columns: 1fr;
+  }
+
   .row {
     flex-direction: column;
   }
@@ -465,7 +570,7 @@ html {
   }
 
   .card {
-    padding: 20px;
+    padding: 22px;
   }
 
   .container {
@@ -477,4 +582,5 @@ html {
     font-size: 14px;
     flex-wrap: wrap;
   }
+
 }

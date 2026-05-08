@@ -18,9 +18,7 @@
 <meta property="og:type" content="website">
 
 <link rel="stylesheet" href="css/style.css">
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 </head>
@@ -37,9 +35,7 @@
 <header class="hero">
   <div class="hero-overlay">
     <h1>Villa CABOUA</h1>
-    <p>
-      Location de vacances à Bouillante en Guadeloupe – Jusqu'à 6 voyageurs
-    </p>
+    <p>Location de vacances à Bouillante en Guadeloupe – Jusqu'à 6 personnes + bébés</p>
   </div>
 </header>
 
@@ -59,6 +55,12 @@
       Située à proximité de la plage de Malendure, des centres de plongée,
       des restaurants et des commerces, cette location saisonnière vous permet
       de profiter pleinement de la Côte Sous-le-Vent.
+    </p>
+
+    <p>
+      La villa accueille jusqu’à 6 personnes maximum.
+      Les bébés de moins de 2 ans dormant dans un lit parapluie sont gratuits,
+      dans la limite de 3 bébés, et ne sont pas comptés dans la capacité maximale.
     </p>
 
     <ul>
@@ -98,19 +100,12 @@
 
     <div class="equipments">
       <div><i class="fa-solid fa-wifi"></i> Wifi haut débit</div>
-
       <div><i class="fa-solid fa-snowflake"></i> Climatisation</div>
-
       <div><i class="fa-solid fa-square-parking"></i> Parking privé</div>
-
       <div><i class="fa-solid fa-bed"></i> 3 chambres</div>
-
       <div><i class="fa-solid fa-tv"></i> TV Orange</div>
-
       <div><i class="fa-solid fa-utensils"></i> Cuisine équipée</div>
-
       <div><i class="fa-solid fa-water-ladder"></i> Proche plage</div>
-
       <div><i class="fa-solid fa-shirt"></i> Machine à laver</div>
     </div>
   </div>
@@ -123,46 +118,38 @@
 
       <div class="review">
         <div class="stars">★★★★★</div>
-
         <p>
           Villa très agréable, propre, spacieuse et parfaitement équipée.
           Le calme du quartier est idéal pour se reposer en famille.
         </p>
-
         <strong>— Karine</strong>
       </div>
 
       <div class="review">
         <div class="stars">★★★★★</div>
-
         <p>
           Excellent séjour en Guadeloupe. La villa est bien située,
           proche de Malendure, des restaurants et des commerces.
           Nous recommandons sans hésiter.
         </p>
-
         <strong>— Ludmina</strong>
       </div>
 
       <div class="review">
         <div class="stars">★★★★★</div>
-
         <p>
           Logement confortable, climatisé, avec une belle terrasse et tout le nécessaire
           pour passer de bonnes vacances. Très bon accueil.
         </p>
-
         <strong>— Karell</strong>
       </div>
 
       <div class="review">
         <div class="stars">★★★★★</div>
-
         <p>
           Séjour parfait pour se déconnecter totalement. La villa est dans la nature,
           sans vis-à-vis et très calme. Nous reviendrons avec plaisir.
         </p>
-
         <strong>— Famille de Saint-François</strong>
       </div>
 
@@ -190,52 +177,41 @@
 
     <h2>Disponibilités</h2>
 
-    <!-- Google Calendar -->
     <iframe
       class="calendar-iframe"
       src="https://calendar.google.com/calendar/embed?src=ds98qjiuc1uqumr9dc1nnaoag24pqfsa%40import.calendar.google.com&ctz=America/Guadeloupe&hl=fr&showPrint=0&showTabs=0">
     </iframe>
 
-    <!-- Calendrier de sélection -->
     <div id="calendar"></div>
 
     <h2>Sélectionner vos dates</h2>
 
-    <!-- Réservation -->
     <div class="booking">
 
       <div class="row">
 
         <div>
-          <label>Adultes</label>
-
+          <label>Nombre de personnes</label>
           <div class="counter">
-            <button id="adultMinus">−</button>
-
-            <span id="adultCount">2</span>
-
-            <button id="adultPlus">+</button>
+            <button id="personMinus">−</button>
+            <span id="personCount">2</span>
+            <button id="personPlus">+</button>
           </div>
         </div>
 
         <div>
-          <label>Enfants</label>
-
+          <label>Bébés - de 2 ans</label>
           <div class="counter">
-            <button id="childMinus">−</button>
-
-            <span id="childCount">0</span>
-
-            <button id="childPlus">+</button>
+            <button id="babyMinus">−</button>
+            <span id="babyCount">0</span>
+            <button id="babyPlus">+</button>
           </div>
         </div>
 
       </div>
 
-      <!-- Prix -->
       <div id="billing" class="billing"></div>
 
-      <!-- Bouton -->
       <button id="checkoutButton" class="btn">
         Réserver maintenant
       </button>
@@ -248,13 +224,8 @@
 
 <!-- ================= FOOTER ================= -->
 <footer class="footer">
-  <p>
-    Villa CABOUA – Location saisonnière à Bouillante en Guadeloupe
-  </p>
-
-  <p>
-    Proche plage de Malendure • Wifi • Climatisation • Parking privé
-  </p>
+  <p>Villa CABOUA – Location saisonnière à Bouillante en Guadeloupe</p>
+  <p>Proche plage de Malendure • Wifi • Climatisation • Parking privé</p>
 </footer>
 
 <!-- ================= WHATSAPP ================= -->
@@ -264,9 +235,7 @@
 
 <!-- ================= SCRIPTS ================= -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
-
 <script src="js/main.js"></script>
 
 </body>

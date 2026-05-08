@@ -29,7 +29,7 @@ html {
   position: sticky;
   top: 0;
   z-index: 2000;
-  flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
 .top-nav a {
@@ -73,20 +73,16 @@ html {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.65),
-    rgba(0,0,0,0.15)
-  );
+  background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0.15));
 }
 
 .hero-overlay {
   position: absolute;
   bottom: 40px;
   left: 40px;
+  right: 20px;
   color: white;
   z-index: 2;
-  max-width: 900px;
 }
 
 .hero-overlay h1 {
@@ -137,10 +133,6 @@ html {
   margin-bottom: 8px;
 }
 
-.seo-intro p {
-  font-size: 17px;
-}
-
 /* === GALERIE === */
 .gallery {
   display: grid;
@@ -162,15 +154,13 @@ html {
 }
 
 /* === ÉQUIPEMENTS === */
-.equipments,
-.activity-grid {
+.equipments {
   display: grid;
   grid-template-columns: repeat(4,1fr);
   gap: 14px;
 }
 
-.equipments div,
-.activity-grid div {
+.equipments div {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -180,13 +170,11 @@ html {
   transition: 0.3s;
 }
 
-.equipments div:hover,
-.activity-grid div:hover {
+.equipments div:hover {
   background: #f0f0f0;
 }
 
-.equipments i,
-.activity-grid i {
+.equipments i {
   color: #0d8f5b;
   font-size: 18px;
 }
@@ -214,6 +202,41 @@ html {
   font-size: 22px;
 }
 
+/* === AVIS CLIQUABLES === */
+.more-reviews {
+  margin-top: 25px;
+}
+
+.review-card {
+  background: #fafafa;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 15px;
+  border: 1px solid #ececec;
+  transition: 0.3s;
+}
+
+.review-card:hover {
+  background: #f5f5f5;
+}
+
+.review-card summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: #0d8f5b;
+  list-style: none;
+  font-size: 16px;
+}
+
+.review-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.review-card p {
+  margin-top: 15px;
+  line-height: 1.7;
+}
+
 /* === FAQ === */
 .faq-item {
   margin-bottom: 25px;
@@ -224,15 +247,6 @@ html {
 .faq-item h3 {
   color: #0d8f5b;
   margin-bottom: 10px;
-}
-
-.text-link {
-  color: #0d8f5b;
-  font-weight: 700;
-}
-
-.text-link:hover {
-  text-decoration: underline;
 }
 
 /* === CALENDRIER GOOGLE === */
@@ -343,6 +357,11 @@ html {
 
 .footer a {
   color: #f1c40f;
+  font-weight: 600;
+}
+
+.footer a:hover {
+  color: white;
 }
 
 /* === WHATSAPP FLOAT === */
@@ -368,34 +387,50 @@ html {
   transform: scale(1.1);
 }
 
-/* === RESPONSIVE TABLET === */
-@media(max-width:900px){
+/* === MODAL === */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 4000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
 
+.modal-content {
+  background: white;
+  margin: 10% auto;
+  padding: 25px;
+  border-radius: 16px;
+  max-width: 420px;
+  text-align: center;
+}
+
+/* === RESPONSIVE TABLET === */
+@media(max-width:900px) {
   .gallery {
     grid-template-columns: repeat(2,1fr);
   }
 
-  .equipments,
-  .activity-grid {
+  .equipments {
     grid-template-columns: repeat(2,1fr);
   }
 
   .reviews {
     grid-template-columns: 1fr;
   }
-
 }
 
 /* === RESPONSIVE MOBILE === */
-@media(max-width:600px){
-
+@media(max-width:600px) {
   .hero {
     height: 320px;
   }
 
   .hero-overlay {
     left: 20px;
-    right: 20px;
     bottom: 25px;
   }
 
@@ -411,8 +446,7 @@ html {
     grid-template-columns: 1fr;
   }
 
-  .equipments,
-  .activity-grid {
+  .equipments {
     grid-template-columns: 1fr;
   }
 
@@ -439,9 +473,8 @@ html {
   }
 
   .top-nav {
-    gap: 14px;
+    gap: 18px;
     font-size: 14px;
-    padding: 14px 12px;
+    flex-wrap: wrap;
   }
-
 }

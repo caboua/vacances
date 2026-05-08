@@ -1,10 +1,19 @@
-/* === GLOBAL === */
+/* === RESET GLOBAL === */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
   background: #f6f6f6;
   color: #222;
   line-height: 1.6;
+  font-size: 16px;
 }
 
 a {
@@ -12,206 +21,180 @@ a {
   color: inherit;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 /* === NAVIGATION === */
 .top-nav {
   width: 100%;
-  background: rgba(255,255,255,0.96);
-  backdrop-filter: blur(10px);
-  padding: 16px 20px;
+  background: rgba(255,255,255,0.97);
+  padding: 16px 25px;
   display: flex;
   justify-content: center;
-  gap: 30px;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+  gap: 35px;
   position: sticky;
   top: 0;
-  z-index: 2000;
-  flex-wrap: wrap;
+  z-index: 3000;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.08);
 }
 
 .top-nav a {
   font-weight: 600;
-  transition: 0.3s;
-  position: relative;
 }
 
 .top-nav a:hover {
   color: #0d8f5b;
 }
 
-.top-nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -5px;
-  width: 0%;
-  height: 2px;
-  background: #0d8f5b;
-  transition: 0.3s;
-}
-
-.top-nav a:hover::after {
-  width: 100%;
-}
-
-/* === HERO IMAGE === */
+/* === HERO === */
 .hero {
-  height: 500px;
+  width: 100%;
+  min-height: 560px;
   background-image: url("../images/fond.jpg");
+  background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: cover;
   position: relative;
-  image-rendering: -webkit-optimize-contrast;
-  transform: translateZ(0);
 }
 
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.65),
-    rgba(0,0,0,0.15)
-  );
+  background: linear-gradient(to top, rgba(0,0,0,0.70), rgba(0,0,0,0.15));
 }
 
 .hero-overlay {
   position: absolute;
-  bottom: 40px;
-  left: 40px;
+  bottom: 80px;
+  left: 80px;
+  right: 40px;
+  max-width: 780px;
   color: white;
   z-index: 2;
-  max-width: 900px;
 }
 
 .hero-overlay h1 {
   margin: 0;
-  font-size: 3rem;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  font-size: 4.2rem;
+  line-height: 1.1;
 }
 
 .hero-overlay p {
-  margin-top: 12px;
+  margin-top: 18px;
+  font-size: 1.35rem;
   color: #f1c40f;
-  font-size: 1.1rem;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 
 .small-hero {
-  height: 300px;
+  min-height: 320px;
 }
 
 /* === CONTAINER === */
 .container {
-  max-width: 1100px;
-  margin: auto;
-  padding: 25px;
+  width: 100%;
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 40px 30px;
 }
 
 /* === CARD === */
 .card {
+  width: 100%;
   background: white;
-  padding: 28px;
-  border-radius: 18px;
-  margin-bottom: 30px;
-  box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+  padding: 35px;
+  border-radius: 22px;
+  margin-bottom: 35px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.07);
 }
 
 .card h2 {
   margin-top: 0;
-  margin-bottom: 18px;
   color: #0d8f5b;
-  font-size: 1.8rem;
-}
-
-.card ul {
-  padding-left: 20px;
-}
-
-.card li {
-  margin-bottom: 8px;
-}
-
-.seo-intro p {
-  font-size: 17px;
+  font-size: 2rem;
 }
 
 /* === GALERIE === */
 .gallery {
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .gallery img {
   width: 100%;
-  height: 240px;
+  min-width: 100%;
+  height: 280px;
+  display: block;
   object-fit: cover;
-  border-radius: 14px;
-  transition: 0.3s;
-  cursor: pointer;
-}
-
-.gallery img:hover {
-  transform: scale(1.02);
+  border-radius: 18px;
+  background: #eee;
 }
 
 /* === ÉQUIPEMENTS === */
-.equipments,
-.activity-grid {
+.equipments {
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(4,1fr);
-  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
 }
 
-.equipments div,
-.activity-grid div {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.equipments div {
   background: #f8f8f8;
-  padding: 12px;
-  border-radius: 12px;
-  transition: 0.3s;
+  padding: 15px;
+  border-radius: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
-.equipments div:hover,
-.activity-grid div:hover {
-  background: #f0f0f0;
-}
-
-.equipments i,
-.activity-grid i {
+.equipments i {
   color: #0d8f5b;
-  font-size: 18px;
 }
 
-/* === AVIS CLIENTS === */
+/* === AVIS === */
 .reviews {
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(2,1fr);
-  gap: 20px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .review {
   background: #fafafa;
-  padding: 20px;
-  border-radius: 14px;
   border: 1px solid #ececec;
-}
-
-.review p {
-  margin-top: 10px;
+  border-radius: 18px;
+  padding: 22px;
+  min-height: 220px;
 }
 
 .stars {
   color: #f5b301;
   font-size: 22px;
+}
+
+/* === AVIS CLIQUABLES === */
+.more-reviews {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.review-card {
+  background: #fafafa;
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid #ececec;
+}
+
+.review-card summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: #0d8f5b;
+  list-style: none;
+}
+
+.review-card summary::-webkit-details-marker {
+  display: none;
 }
 
 /* === FAQ === */
@@ -223,109 +206,91 @@ html {
 
 .faq-item h3 {
   color: #0d8f5b;
-  margin-bottom: 10px;
 }
 
-.text-link {
-  color: #0d8f5b;
-  font-weight: 700;
+/* === DISPONIBILITÉS === */
+#disponibilites {
+  display: grid;
+  grid-template-columns: 1.35fr 0.9fr;
+  gap: 30px;
+  align-items: start;
 }
 
-.text-link:hover {
-  text-decoration: underline;
+#disponibilites h2:first-child {
+  grid-column: 1 / -1;
 }
 
-/* === CALENDRIER GOOGLE === */
 .calendar-iframe {
   width: 100%;
-  height: 500px;
+  min-width: 100%;
+  height: 620px;
   border: none;
-  margin-bottom: 20px;
-  border-radius: 14px;
-  overflow: hidden;
-  clip-path: inset(0px 0px 30px 0px);
+  border-radius: 18px;
+  background: white;
 }
 
-/* === FLATPICKR === */
 #calendar {
-  margin-top: 20px;
+  width: 100%;
 }
 
 /* === BOOKING === */
 .booking {
-  margin-top: 20px;
+  width: 100%;
+  background: #fafafa;
+  padding: 25px;
+  border-radius: 18px;
+  border: 1px solid #ececec;
+  position: sticky;
+  top: 95px;
 }
 
-/* === FLEX ROW === */
 .row {
   display: flex;
-  justify-content: space-between;
   gap: 20px;
+  margin-bottom: 20px;
 }
 
-/* === COUNTER === */
 .counter {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-top: 8px;
 }
 
 .counter button {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   border: 1px solid #ccc;
   background: white;
   cursor: pointer;
-  transition: 0.2s;
   font-size: 18px;
-}
-
-.counter button:hover {
-  background: #f3f3f3;
-}
-
-.counter button:active {
-  transform: scale(0.95);
 }
 
 /* === PRIX === */
 .billing {
   margin: 25px 0;
-  font-size: 16px;
-  background: #fafafa;
-  padding: 18px;
-  border-radius: 14px;
-}
-
-.billing p {
-  margin: 6px 0;
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #ececec;
 }
 
 .billing h2 {
-  margin-top: 14px;
-  font-size: 24px;
+  font-size: 28px;
 }
 
 /* === BOUTON === */
 .btn {
   width: 100%;
-  padding: 17px;
+  padding: 18px;
+  border: none;
+  border-radius: 16px;
   background: linear-gradient(135deg, #e67e22, #d96c10);
   color: white;
-  border: none;
-  border-radius: 12px;
   font-weight: bold;
-  cursor: pointer;
   font-size: 17px;
-  transition: 0.3s;
-  box-shadow: 0 6px 20px rgba(230,126,34,0.3);
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(135deg, #cf711f, #c8650f);
+  cursor: pointer;
 }
 
 /* === FOOTER === */
@@ -333,23 +298,20 @@ html {
   background: #111;
   color: white;
   text-align: center;
-  padding: 35px 20px;
-  margin-top: 40px;
-}
-
-.footer p {
-  margin: 8px 0;
+  padding: 45px 20px;
+  margin-top: 50px;
 }
 
 .footer a {
   color: #f1c40f;
+  font-weight: 600;
 }
 
-/* === WHATSAPP FLOAT === */
+/* === WHATSAPP === */
 .whatsapp {
   position: fixed;
-  bottom: 20px;
   right: 20px;
+  bottom: 20px;
   width: 72px;
   height: 72px;
   background: #25D366;
@@ -359,38 +321,55 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-  z-index: 3000;
-  transition: 0.3s;
+  z-index: 5000;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
 }
 
-.whatsapp:hover {
-  transform: scale(1.1);
-}
-
-/* === RESPONSIVE TABLET === */
-@media(max-width:900px){
-
-  .gallery {
-    grid-template-columns: repeat(2,1fr);
+/* === TABLETTE === */
+@media(max-width:1000px) {
+  .hero {
+    min-height: 450px;
   }
 
-  .equipments,
-  .activity-grid {
-    grid-template-columns: repeat(2,1fr);
+  .hero-overlay {
+    left: 40px;
+    bottom: 45px;
+  }
+
+  .hero-overlay h1 {
+    font-size: 3rem;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .equipments {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .reviews {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .more-reviews {
     grid-template-columns: 1fr;
   }
 
+  #disponibilites {
+    grid-template-columns: 1fr;
+  }
+
+  .booking {
+    position: relative;
+    top: 0;
+  }
 }
 
-/* === RESPONSIVE MOBILE === */
-@media(max-width:600px){
-
+/* === MOBILE === */
+@media(max-width:600px) {
   .hero {
-    height: 320px;
+    min-height: 320px;
   }
 
   .hero-overlay {
@@ -400,19 +379,34 @@ html {
   }
 
   .hero-overlay h1 {
-    font-size: 2rem;
+    font-size: 2.1rem;
   }
 
   .hero-overlay p {
     font-size: 1rem;
   }
 
+  .container {
+    padding: 15px;
+  }
+
+  .card {
+    padding: 22px;
+  }
+
   .gallery {
     grid-template-columns: 1fr;
   }
 
-  .equipments,
-  .activity-grid {
+  .gallery img {
+    height: 260px;
+  }
+
+  .equipments {
+    grid-template-columns: 1fr;
+  }
+
+  .reviews {
     grid-template-columns: 1fr;
   }
 
@@ -421,7 +415,13 @@ html {
   }
 
   .calendar-iframe {
-    height: 350px;
+    height: 380px;
+  }
+
+  .top-nav {
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: 14px;
   }
 
   .whatsapp {
@@ -429,19 +429,4 @@ html {
     height: 60px;
     font-size: 28px;
   }
-
-  .card {
-    padding: 20px;
-  }
-
-  .container {
-    padding: 15px;
-  }
-
-  .top-nav {
-    gap: 14px;
-    font-size: 14px;
-    padding: 14px 12px;
-  }
-
 }
